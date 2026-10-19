@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "game": "groups",
+  "puzzle_id": "fixture-financial-001",
+  "domain": "financial",
+  "title": "FIXTURE — NOT REVIEWED CONTENT · Money basics",
+  "groups": [
+    {
+      "label": "Ways to pay",
+      "items": ["Cash", "Card", "Cheque", "Transfer"],
+      "difficulty": 1,
+      "source_lesson_ids": ["fixture-lesson-fin-1"],
+      "makes_health_claim": false
+    },
+    {
+      "label": "Found on a payslip",
+      "items": ["Gross pay", "Net pay", "Tax code", "Deductions"],
+      "difficulty": 2,
+      "source_lesson_ids": ["fixture-lesson-fin-2"],
+      "makes_health_claim": false
+    },
+    {
+      "label": "Kinds of savings account",
+      "items": ["Easy access", "Fixed term", "Notice", "Regular saver"],
+      "difficulty": 3,
+      "source_lesson_ids": ["fixture-lesson-fin-3"],
+      "makes_health_claim": false
+    },
+    {
+      "label": "___ rate",
+      "items": ["Interest", "Exchange", "Base", "Flat"],
+      "difficulty": 4,
+      "source_lesson_ids": [],
+      "makes_health_claim": false
+    }
+  ]
+}

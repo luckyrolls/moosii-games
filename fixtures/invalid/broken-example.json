@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "game": "groups",
+  "puzzle_id": "fixture-invalid-001",
+  "domain": "financial",
+  "title": "FIXTURE — NOT REVIEWED CONTENT · Deliberately invalid (tests the error screen)",
+  "groups": [
+    {
+      "label": "Ways to pay",
+      "items": ["Cash", "Card", "Cheque"],
+      "difficulty": 1,
+      "source_lesson_ids": [],
+      "makes_health_claim": false
+    },
+    {
+      "label": "Found on a payslip",
+      "items": ["Gross pay", "Net pay", "Tax code", "Cash"],
+      "difficulty": 1,
+      "source_lesson_ids": [],
+      "makes_health_claim": false
+    },
+    {
+      "label": "Kinds of savings account",
+      "items": ["Easy access", "Fixed term", "Notice", "Regular saver"],
+      "difficulty": 3,
+      "source_lesson_ids": [],
+      "makes_health_claim": false
+    }
+  ]
+}

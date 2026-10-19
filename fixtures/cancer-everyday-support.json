@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "game": "groups",
+  "puzzle_id": "fixture-cancer-001",
+  "domain": "cancer",
+  "title": "FIXTURE — NOT REVIEWED CONTENT · Everyday life and support",
+  "groups": [
+    {
+      "label": "Gentle ways to spend an afternoon",
+      "items": ["Reading", "Gardening", "Jigsaw", "Knitting"],
+      "difficulty": 1,
+      "source_lesson_ids": ["fixture-lesson-can-1"],
+      "makes_health_claim": false
+    },
+    {
+      "label": "People who might be in your corner",
+      "items": ["Friend", "Neighbour", "Counsellor", "Colleague"],
+      "difficulty": 2,
+      "source_lesson_ids": ["fixture-lesson-can-2"],
+      "makes_health_claim": false
+    },
+    {
+      "label": "Handy to bring to an appointment",
+      "items": ["Notebook", "Question list", "Phone charger", "Snack"],
+      "difficulty": 3,
+      "source_lesson_ids": ["fixture-lesson-can-3"],
+      "makes_health_claim": false
+    },
+    {
+      "label": "___ group",
+      "items": ["Support", "Walking", "Book", "Peer"],
+      "difficulty": 4,
+      "source_lesson_ids": [],
+      "makes_health_claim": false
+    }
+  ]
+}

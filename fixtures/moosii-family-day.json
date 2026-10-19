@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "game": "groups",
+  "puzzle_id": "fixture-moosii-001",
+  "domain": "moosii",
+  "title": "FIXTURE — NOT REVIEWED CONTENT · A busy family day",
+  "groups": [
+    {
+      "label": "Bedtime routine",
+      "items": ["Bath", "Pyjamas", "Story", "Teeth"],
+      "difficulty": 1,
+      "source_lesson_ids": ["fixture-lesson-par-1"],
+      "makes_health_claim": false
+    },
+    {
+      "label": "Packed in a school bag",
+      "items": ["Lunchbox", "Water bottle", "Reading book", "PE kit"],
+      "difficulty": 2,
+      "source_lesson_ids": ["fixture-lesson-par-2"],
+      "makes_health_claim": false
+    },
+    {
+      "label": "At the playground",
+      "items": ["Swing", "Slide", "Seesaw", "Climbing frame"],
+      "difficulty": 3,
+      "source_lesson_ids": [],
+      "makes_health_claim": false
+    },
+    {
+      "label": "___ time",
+      "items": ["Screen", "Snack", "Quiet", "Family"],
+      "difficulty": 4,
+      "source_lesson_ids": ["fixture-lesson-par-3"],
+      "makes_health_claim": false
+    }
+  ]
+}
