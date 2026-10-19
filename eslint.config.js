@@ -53,6 +53,12 @@ export default tseslint.config(
     },
   },
 
+  // Tests index into known fixtures; non-null assertions keep them readable.
+  {
+    files: ['**/*.test.{ts,tsx}'],
+    rules: { '@typescript-eslint/no-non-null-assertion': 'off' },
+  },
+
   // Config files run in Node.
   {
     files: ['*.config.{ts,js}'],
