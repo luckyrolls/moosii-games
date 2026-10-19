@@ -4,11 +4,27 @@ import type { GroupsPuzzle } from './types';
 
 const nonEmptyString = z.string().refine((s) => s.trim().length > 0, 'must be a non-empty string');
 
+/**
+ * Text shown to players. Rejected (never trimmed) if it starts or ends with whitespace, so the
+ * file always holds exactly what appears on screen. Blank strings get only the non-empty error.
+ */
+const displayText = nonEmptyString.refine(
+  (s) => s.trim().length === 0 || s === s.trim(),
+  'must not start or end with whitespace',
+);
+
+const BLANK_RUN = /_{2,}/;
+
+const labelText = displayText.refine(
+  (s) => !BLANK_RUN.test(s),
+  'use a word instead of a blank — screen readers read underscores aloud',
+);
+
 const groupSchema = z
   .object({
-    label: nonEmptyString,
+    label: labelText,
     items: z
-      .array(nonEmptyString)
+      .array(displayText)
       .length(ITEMS_PER_GROUP, `must contain exactly ${ITEMS_PER_GROUP} items`),
     difficulty: z.union([z.literal(1), z.literal(2), z.literal(3), z.literal(4)], {
       errorMap: () => ({ message: 'must be 1, 2, 3 or 4' }),
@@ -28,7 +44,7 @@ const puzzleSchema = z
     domain: z.enum(DOMAINS, {
       errorMap: () => ({ message: `must be one of ${DOMAINS.map((d) => `"${d}"`).join(', ')}` }),
     }),
-    title: nonEmptyString,
+    title: displayText,
     groups: z.array(groupSchema).length(GROUP_COUNT, `must contain exactly ${GROUP_COUNT} groups`),
   })
   .strict()
@@ -47,11 +63,11 @@ const puzzleSchema = z
       }
     });
 
-    // Compare case- and space-insensitively: "Swing" and " swing" would look identical on a tile.
+    // Compare case-insensitively: "Swing" and "swing" would read as the same tile.
     const itemSeenAt = new Map<string, string>();
     puzzle.groups.forEach((group, groupIndex) => {
       group.items.forEach((item, itemIndex) => {
-        const key = item.trim().toLowerCase();
+        const key = item.toLowerCase();
         const where = `groups[${groupIndex}].items[${itemIndex}]`;
         const previous = itemSeenAt.get(key);
         if (previous !== undefined) {

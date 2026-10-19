@@ -27,7 +27,7 @@
       "makes_health_claim": false
     },
     {
-      "label": "___ time",
+      "label": "Comes before time",
       "items": ["Screen", "Snack", "Quiet", "Family"],
       "difficulty": 4,
       "source_lesson_ids": ["fixture-lesson-par-3"],

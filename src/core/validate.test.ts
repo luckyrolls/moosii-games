@@ -50,12 +50,43 @@ describe('validatePuzzle', () => {
     ['unknown group field', (p) => { p.groups[0]!.colour = 'blue'; }, /^groups\[0\]: unknown field\(s\) "colour"/],
     ['duplicate item within a group', (p) => { items(p, 0)[1] = 'Apple'; }, /^groups\[0\]\.items\[1\]: item "Apple" duplicates groups\[0\]\.items\[0\]/],
     ['duplicate item across groups', (p) => { items(p, 2)[0] = 'Chair'; }, /^groups\[2\]\.items\[0\]: item "Chair" duplicates groups\[1\]\.items\[0\]/],
-    ['duplicate item differing only by case/space', (p) => { items(p, 3)[3] = ' apple'; }, /item " apple" duplicates groups\[0\]\.items\[0\]/],
+    ['duplicate item differing only by case', (p) => { items(p, 3)[3] = 'APPLE'; }, /^groups\[3\]\.items\[3\]: item "APPLE" duplicates groups\[0\]\.items\[0\]/],
+    ['title with leading whitespace', (p) => { p.title = ' Test puzzle'; }, /^title: must not start or end with whitespace/],
+    ['label with trailing whitespace', (p) => { p.groups[1]!.label = 'Furniture '; }, /^groups\[1\]\.label: must not start or end with whitespace/],
+    ['item with trailing newline', (p) => { items(p, 2)[1] = 'Snow\n'; }, /^groups\[2\]\.items\[1\]: must not start or end with whitespace/],
+    ['label with a blank (___)', (p) => { p.groups[0]!.label = '___ salad'; }, /^groups\[0\]\.label: use a word instead of a blank — screen readers read underscores aloud/],
+    ['label with a two-underscore blank', (p) => { p.groups[0]!.label = 'Fruit __'; }, /^groups\[0\]\.label: use a word instead of a blank/],
   ];
 
   it.each(cases)('rejects %s', (_name, mutate, expected) => {
     const errors = errorsFor(broken(mutate));
     expect(errors.some((e) => expected.test(e)), `got: ${errors.join(' | ')}`).toBe(true);
+  });
+
+  it('accepts inner whitespace in title, labels and items', () => {
+    const p = samplePuzzle();
+    p.title = 'Test  puzzle with spaces';
+    p.groups[0]!.label = 'Fruit in a bowl';
+    p.groups[1]!.items[0] = 'Arm chair';
+    expect(validatePuzzle(p).ok).toBe(true);
+  });
+
+  it('accepts a single underscore in a label', () => {
+    const p = samplePuzzle();
+    p.groups[0]!.label = 'Fruit_basket';
+    expect(validatePuzzle(p).ok).toBe(true);
+  });
+
+  it('does not trim or otherwise change accepted values', () => {
+    const p = samplePuzzle();
+    p.groups[0]!.label = 'Fruit  bowl';
+    const result = validatePuzzle(p);
+    expect(result.ok && result.puzzle.groups[0]!.label).toBe('Fruit  bowl');
+  });
+
+  it('reports a blank value once, not also as whitespace', () => {
+    const errors = errorsFor(broken((p) => { p.title = '   '; }));
+    expect(errors).toEqual(['title: must be a non-empty string']);
   });
 
   it('reports every problem, not just the first', () => {

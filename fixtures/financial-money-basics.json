@@ -27,7 +27,7 @@
       "makes_health_claim": false
     },
     {
-      "label": "___ rate",
+      "label": "Comes before rate",
       "items": ["Interest", "Exchange", "Base", "Flat"],
       "difficulty": 4,
       "source_lesson_ids": [],

@@ -27,7 +27,7 @@
       "makes_health_claim": false
     },
     {
-      "label": "___ group",
+      "label": "Comes before group",
       "items": ["Support", "Walking", "Book", "Peer"],
       "difficulty": 4,
       "source_lesson_ids": [],

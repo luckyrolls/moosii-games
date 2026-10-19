@@ -38,22 +38,28 @@ interface PuzzleGroup {
 | `game` | `"groups"` | Must be exactly `"groups"`. |
 | `puzzle_id` | string | Required, not blank. Stable forever: it seeds the starting tile layout, so every player sees the same board, and it identifies the puzzle in completion events. |
 | `domain` | `"moosii"` \| `"financial"` \| `"cancer"` | `moosii` = parenting, `financial` = money, `cancer` = life after cancer. |
-| `title` | string | Required, not blank. Shown to the player. |
+| `title` | string | Required, not blank, no leading/trailing whitespace. Shown to the player. |
 | `groups` | array | Exactly 4 groups. |
-| `groups[].label` | string | Required, not blank. Shown when the group is found or revealed. |
-| `groups[].items` | string[] | Exactly 4 non-blank strings. Shown on the tiles. |
+| `groups[].label` | string | Required, not blank, no leading/trailing whitespace, no run of 2+ underscores. Shown when the group is found or revealed. |
+| `groups[].items` | string[] | Exactly 4 non-blank strings, none with leading/trailing whitespace. Shown on the tiles. |
 | `groups[].difficulty` | `1`–`4` | 1 is the most straightforward group, 4 the trickiest. Each value appears exactly once across the 4 groups. |
 | `groups[].source_lesson_ids` | string[] | IDs of the lessons the group draws on. May be empty. Entries must not be blank. |
 | `groups[].makes_health_claim` | boolean | Required. `true` flags the group for clinical review before publishing. |
 
 ### Cross-field rules
 
-- **Items are unique across the whole puzzle**, compared case-insensitively and ignoring
-  leading/trailing spaces (`"Swing"` and `" swing"` count as duplicates, because they would
-  look identical on a tile).
+- **Items are unique across the whole puzzle**, compared case-insensitively (`"Swing"` and
+  `"swing"` count as duplicates, because they would read as the same tile).
 - **Each difficulty 1–4 is used exactly once.**
 - **No unknown fields**, at the top level or inside a group. Misspelt fields are errors, not
   silently ignored.
+- **No leading or trailing whitespace** in `title`, any `label` or any item (spaces, tabs,
+  newlines). It is rejected rather than trimmed, for example
+  `groups[1].label: must not start or end with whitespace`. Whitespace inside the text is fine.
+  A value that is entirely whitespace gets only the non-blank error.
+- **No blanks in labels.** A `label` must not contain two or more underscores in a row
+  (`"___ rate"`): `groups[3].label: use a word instead of a blank — screen readers read underscores aloud`.
+  Write it out instead, e.g. `"Comes before rate"`. A single underscore is allowed.
 - **Values are not transformed.** Validation never trims or rewrites text; what is in the file
   is what players see.
 
@@ -73,7 +79,7 @@ Validation reports every problem it finds, each as `path: message`, for example
     { "label": "Ways to pay", "items": ["Cash", "Card", "Cheque", "Transfer"], "difficulty": 1, "source_lesson_ids": ["lesson-1"], "makes_health_claim": false },
     { "label": "Found on a payslip", "items": ["Gross pay", "Net pay", "Tax code", "Deductions"], "difficulty": 2, "source_lesson_ids": [], "makes_health_claim": false },
     { "label": "Kinds of savings account", "items": ["Easy access", "Fixed term", "Notice", "Regular saver"], "difficulty": 3, "source_lesson_ids": [], "makes_health_claim": false },
-    { "label": "___ rate", "items": ["Interest", "Exchange", "Base", "Flat"], "difficulty": 4, "source_lesson_ids": [], "makes_health_claim": false }
+    { "label": "Comes before rate", "items": ["Interest", "Exchange", "Base", "Flat"], "difficulty": 4, "source_lesson_ids": [], "makes_health_claim": false }
   ]
 }
 ```
