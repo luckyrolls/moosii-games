@@ -1,0 +1,296 @@
+.mg-board {
+  container-type: inline-size;
+  width: 100%;
+  font-family: var(--mg-font-family);
+  font-size: var(--mg-font-size);
+  line-height: var(--mg-line-height);
+  color: var(--mg-color-text);
+  display: flex;
+  flex-direction: column;
+  gap: var(--mg-space-4);
+  max-width: 36rem;
+  margin: 0 auto;
+}
+
+.mg-board *,
+.mg-board *::before,
+.mg-board *::after {
+  box-sizing: border-box;
+}
+
+.mg-board__header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mg-space-1);
+}
+
+.mg-board__name {
+  margin: 0;
+  font-size: var(--mg-font-size-title);
+  line-height: 1.2;
+}
+
+.mg-board__title {
+  margin: 0;
+  color: var(--mg-color-text-muted);
+}
+
+.mg-board__instructions {
+  margin: 0;
+}
+
+/* ---------- Groups (found or revealed) ---------- */
+
+.mg-groups {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--mg-space-2);
+}
+
+.mg-group {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--mg-space-3);
+  padding: var(--mg-space-3) var(--mg-space-4);
+  border-radius: var(--mg-radius);
+  border: var(--mg-border-width) solid var(--mg-color-text);
+  color: var(--mg-group-text);
+  background-color: var(--mg-group-fill);
+  background-image: var(--mg-group-pattern);
+}
+
+.mg-group--revealed {
+  border-style: dashed;
+}
+
+.mg-group--d1 {
+  --mg-group-fill: var(--mg-group-1);
+  /* dots */
+  --mg-group-pattern: radial-gradient(var(--mg-color-pattern) 2px, transparent 2.5px);
+  background-size: 12px 12px;
+}
+
+.mg-group--d2 {
+  --mg-group-fill: var(--mg-group-2);
+  /* diagonal stripes */
+  --mg-group-pattern: repeating-linear-gradient(45deg, var(--mg-color-pattern) 0 3px, transparent 3px 11px);
+}
+
+.mg-group--d3 {
+  --mg-group-fill: var(--mg-group-3);
+  /* grid */
+  --mg-group-pattern: linear-gradient(var(--mg-color-pattern) 2px, transparent 2px),
+    linear-gradient(90deg, var(--mg-color-pattern) 2px, transparent 2px);
+  background-size: 14px 14px;
+}
+
+.mg-group--d4 {
+  --mg-group-fill: var(--mg-group-4);
+  /* horizontal bands */
+  --mg-group-pattern: repeating-linear-gradient(0deg, var(--mg-color-pattern) 0 3px, transparent 3px 10px);
+}
+
+.mg-group__icon {
+  flex: none;
+  width: 2rem;
+  height: 2rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--mg-color-surface);
+  color: var(--mg-color-text);
+  border: var(--mg-border-width) solid var(--mg-color-text);
+}
+
+.mg-group__icon svg {
+  width: 1.1rem;
+  height: 1.1rem;
+  fill: currentColor;
+}
+
+.mg-group__body {
+  min-width: 0;
+  /* Keep text readable on top of the pattern. */
+  background: color-mix(in srgb, var(--mg-group-fill) 88%, transparent);
+  border-radius: 0.375rem;
+  padding: 0 var(--mg-space-1);
+}
+
+.mg-group__label {
+  margin: 0;
+  font-weight: 700;
+}
+
+.mg-group__tag {
+  font-weight: 400;
+  font-style: italic;
+}
+
+.mg-group__items {
+  margin: 0;
+}
+
+/* ---------- Tiles ---------- */
+
+.mg-tiles {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--mg-space-2);
+}
+
+.mg-tile {
+  position: relative;
+  width: 100%;
+  min-height: max(var(--mg-tap-min), var(--mg-tile-min-height));
+  min-width: var(--mg-tap-min);
+  padding: var(--mg-space-2) var(--mg-space-1);
+  border-radius: var(--mg-radius);
+  border: var(--mg-border-width) solid var(--mg-color-border);
+  background: var(--mg-color-tile);
+  color: var(--mg-color-tile-text);
+  font: inherit;
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+  overflow-wrap: normal;
+  cursor: pointer;
+  transition: background-color var(--mg-transition), color var(--mg-transition), transform var(--mg-transition);
+}
+
+.mg-tile:hover {
+  border-color: var(--mg-color-text);
+}
+
+.mg-tile[aria-pressed='true'] {
+  background: var(--mg-color-selected);
+  color: var(--mg-color-selected-text);
+  border-color: var(--mg-color-selected);
+  transform: scale(0.97);
+}
+
+/*
+ * On narrow boards, four columns can't fit longer words at 18px without breaking them
+ * mid-word, so drop to two wider columns instead of shrinking the text.
+ */
+@container (max-width: 30rem) {
+  .mg-tiles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .mg-tile {
+    min-height: 3.25rem;
+  }
+}
+
+/* Selected tiles also get a tick, so selection never relies on colour alone. */
+.mg-tile__tick {
+  position: absolute;
+  top: 0.2rem;
+  right: 0.3rem;
+  width: 0.9rem;
+  height: 0.9rem;
+  fill: currentColor;
+}
+
+/* ---------- Status, messages and controls ---------- */
+
+.mg-status {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--mg-space-2);
+  color: var(--mg-color-text-muted);
+}
+
+.mg-message {
+  min-height: 1.5em;
+  margin: 0;
+  font-weight: 600;
+}
+
+.mg-controls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--mg-space-2);
+}
+
+.mg-button {
+  min-height: var(--mg-tap-min);
+  padding: var(--mg-space-2) var(--mg-space-4);
+  border-radius: 999px;
+  border: var(--mg-border-width) solid var(--mg-color-button);
+  background: var(--mg-color-button);
+  color: var(--mg-color-button-text);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.mg-button--secondary {
+  background: var(--mg-color-button-secondary);
+  color: var(--mg-color-button-secondary-text);
+}
+
+.mg-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.mg-button--wide {
+  grid-column: 1 / -1;
+}
+
+.mg-tile:focus-visible,
+.mg-button:focus-visible,
+.mg-results__heading:focus-visible {
+  outline: var(--mg-focus-ring);
+  outline-offset: 3px;
+}
+
+/* ---------- Results ---------- */
+
+.mg-results {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mg-space-3);
+  padding: var(--mg-space-4);
+  border-radius: var(--mg-radius);
+  border: var(--mg-border-width) solid var(--mg-color-border);
+  background: var(--mg-color-surface);
+}
+
+.mg-results__heading {
+  margin: 0;
+  font-size: var(--mg-font-size-title);
+}
+
+.mg-results__share {
+  margin: 0;
+  font-size: 1.5rem;
+  line-height: 1.25;
+  letter-spacing: 0.1em;
+  white-space: pre;
+}
+
+@media (prefers-contrast: more) {
+  .mg-tile,
+  .mg-group__body {
+    background-image: none;
+  }
+  .mg-button:disabled {
+    opacity: 1;
+    border-style: dashed;
+  }
+}
+
+@media (forced-colors: active) {
+  .mg-tile[aria-pressed='true'] {
+    outline: 3px solid Highlight;
+  }
+}

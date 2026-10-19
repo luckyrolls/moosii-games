@@ -1,0 +1,121 @@
+/* Playground-only styles. Not part of the reusable components. */
+html {
+  background: var(--mg-color-bg, #fbf8f3);
+  color: var(--mg-color-text, #24211d);
+}
+
+body {
+  margin: 0;
+  font-family: var(--mg-font-family, system-ui, sans-serif);
+  font-size: 1.125rem;
+  line-height: 1.45;
+}
+
+.pg {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 1rem 1rem 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.pg-header h1 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.pg-note {
+  margin: 0.25rem 0 0;
+  color: var(--mg-color-text-muted, #5b554d);
+}
+
+.pg-controls {
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0.75rem 1rem 1rem;
+  border: 2px dashed var(--mg-color-border, #cfc6b8);
+  border-radius: 0.75rem;
+}
+
+.pg-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+  flex: 1 1 12rem;
+}
+
+.pg-field--wide {
+  flex-basis: 100%;
+}
+
+.pg-field select,
+.pg-field textarea,
+.pg-button {
+  font: inherit;
+  min-height: 44px;
+  max-width: 100%;
+  border-radius: 0.5rem;
+  border: 2px solid var(--mg-color-border, #cfc6b8);
+  background: var(--mg-color-surface, #fff);
+  color: inherit;
+  padding: 0.25rem 0.5rem;
+}
+
+.pg-field textarea {
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 1.125rem;
+}
+
+.pg-button {
+  cursor: pointer;
+  padding: 0.25rem 1rem;
+}
+
+.pg-field select:focus-visible,
+.pg-field textarea:focus-visible,
+.pg-button:focus-visible {
+  outline: 3px solid var(--mg-color-focus, #1f5fbf);
+  outline-offset: 2px;
+}
+
+.pg-error {
+  padding: 1rem;
+  border: 3px solid currentColor;
+  border-radius: 0.75rem;
+  background: var(--mg-color-surface, #fff);
+}
+
+.pg-error h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.25rem;
+}
+
+.pg-error ul {
+  margin: 0.5rem 0 0;
+  padding-left: 1.25rem;
+}
+
+.pg-error code {
+  overflow-wrap: anywhere;
+}
+
+.pg-output h2 {
+  margin: 1rem 0 0.25rem;
+  font-size: 1.125rem;
+}
+
+.pg-code {
+  margin: 0.5rem 0 0;
+  padding: 0.75rem;
+  overflow-x: auto;
+  border-radius: 0.5rem;
+  border: 2px solid var(--mg-color-border, #cfc6b8);
+  background: var(--mg-color-surface, #fff);
+  font-size: 1.125rem;
+}
