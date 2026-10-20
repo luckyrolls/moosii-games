@@ -6,3 +6,5 @@ export * from './engine';
 export * from './share';
 export * from './completion';
 export * from './messages';
+export * from './word';
+export * from './date';
