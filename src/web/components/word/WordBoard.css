@@ -1,0 +1,263 @@
+/* ---------- Legend ---------- */
+
+.mg-legend {
+  white-space: nowrap;
+  margin-left: 0.3em;
+}
+
+.mg-mark-icon {
+  width: 0.8em;
+  height: 0.8em;
+  fill: currentColor;
+  vertical-align: -0.05em;
+}
+
+.mg-legend:nth-of-type(1) .mg-mark-icon {
+  color: var(--mg-mark-in-place);
+}
+.mg-legend:nth-of-type(2) .mg-mark-icon {
+  color: var(--mg-mark-elsewhere);
+}
+.mg-legend:nth-of-type(3) .mg-mark-icon {
+  color: var(--mg-mark-absent-text);
+}
+
+/* ---------- Hint ---------- */
+
+.mg-word__hint {
+  margin: 0;
+  padding: var(--mg-space-3) var(--mg-space-4);
+  border-radius: var(--mg-radius);
+  border: var(--mg-border-width) dashed var(--mg-color-border);
+  background: var(--mg-color-surface);
+}
+
+.mg-word__hint:focus-visible {
+  outline: var(--mg-focus-ring);
+  outline-offset: 3px;
+}
+
+/* ---------- Grid ---------- */
+
+.mg-word-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--mg-space-2);
+}
+
+.mg-word-row {
+  display: grid;
+  grid-template-columns: repeat(var(--mg-word-cols, 6), minmax(0, 3.5rem));
+  justify-content: center;
+  gap: var(--mg-space-2);
+}
+
+.mg-cell {
+  position: relative;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border-radius: 0.5rem;
+  border: var(--mg-border-width) solid var(--mg-cell-border);
+  background: var(--mg-cell-empty);
+  color: var(--mg-color-text);
+  font-size: 1.5rem;
+  font-weight: 700;
+  transition: background-color var(--mg-transition), border-color var(--mg-transition);
+}
+
+.mg-cell__letter {
+  display: grid;
+  place-items: center;
+  width: 84%;
+  height: 84%;
+  border-radius: 50%;
+  line-height: 1;
+}
+
+.mg-cell--typed {
+  border-color: var(--mg-color-text);
+}
+
+/* In place: filled disc. */
+.mg-cell--in_place .mg-cell__letter {
+  background: var(--mg-mark-in-place);
+  color: var(--mg-mark-in-place-text);
+}
+
+/* Elsewhere: ring. */
+.mg-cell--elsewhere .mg-cell__letter {
+  border: 0.25rem solid var(--mg-mark-elsewhere);
+}
+
+/* Absent: muted cell with a dash under the letter. */
+.mg-cell--absent {
+  background: var(--mg-mark-absent-bg);
+  color: var(--mg-mark-absent-text);
+  border-style: dashed;
+}
+
+.mg-cell--absent::after {
+  content: '';
+  position: absolute;
+  left: 32%;
+  right: 32%;
+  bottom: 14%;
+  height: 0.2rem;
+  border-radius: 0.1rem;
+  background: currentColor;
+}
+
+/* ---------- Keyboard ---------- */
+
+.mg-keyboard {
+  --mg-key-gap: 0.375rem;
+  display: flex;
+  flex-direction: column;
+  gap: var(--mg-key-gap);
+  user-select: none;
+}
+
+/* Narrow boards: each half-row of QWERTY gets its own line, five keys wide. */
+.mg-keyboard__row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mg-key-gap);
+}
+
+.mg-keyboard__half {
+  display: flex;
+  justify-content: center;
+  gap: var(--mg-key-gap);
+}
+
+.mg-key {
+  position: relative;
+  flex: 0 0 calc((100% - 4 * var(--mg-key-gap)) / 5);
+  min-width: var(--mg-tap-min);
+  min-height: max(var(--mg-tap-min), 3rem);
+  padding: 0 var(--mg-space-1);
+  border-radius: 0.5rem;
+  border: var(--mg-border-width) solid var(--mg-color-border);
+  background: var(--mg-color-tile);
+  color: var(--mg-color-tile-text);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color var(--mg-transition);
+}
+
+.mg-key .mg-mark-icon {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.3rem;
+  width: 0.7rem;
+  height: 0.7rem;
+}
+
+.mg-key--in_place {
+  background: var(--mg-mark-in-place);
+  border-color: var(--mg-mark-in-place);
+  color: var(--mg-mark-in-place-text);
+}
+
+.mg-key--elsewhere {
+  border: 0.2rem solid var(--mg-mark-elsewhere);
+}
+
+.mg-key--elsewhere .mg-mark-icon {
+  color: var(--mg-mark-elsewhere);
+}
+
+.mg-key--absent {
+  background: var(--mg-mark-absent-bg);
+  color: var(--mg-mark-absent-text);
+  border-style: dashed;
+}
+
+.mg-keyboard__actions {
+  flex-direction: row;
+}
+
+.mg-key--action {
+  flex: 1 1 0;
+}
+
+.mg-key--enter {
+  background: var(--mg-color-button);
+  border-color: var(--mg-color-button);
+  color: var(--mg-color-button-text);
+}
+
+.mg-key:focus-visible {
+  outline: var(--mg-focus-ring);
+  outline-offset: 2px;
+  z-index: 1;
+}
+
+.mg-key:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* Wide boards: classic three QWERTY rows, ten keys across. */
+@container (min-width: 32rem) {
+  .mg-keyboard__row {
+    flex-direction: row;
+    justify-content: center;
+  }
+  .mg-keyboard__half {
+    display: contents;
+  }
+  .mg-key {
+    flex-basis: calc((100% - 9 * var(--mg-key-gap)) / 10);
+  }
+  .mg-key--action {
+    flex: 0 1 10rem;
+  }
+}
+
+/* ---------- Results ---------- */
+
+.mg-word__answer {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+}
+
+.mg-word__takeaway {
+  margin: 0;
+  padding: var(--mg-space-4);
+  border-left: 0.4rem solid var(--mg-mark-in-place);
+  border-radius: 0 var(--mg-radius) var(--mg-radius) 0;
+  background: var(--mg-color-bg);
+  font-size: 1.375rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.mg-word__takeaway p {
+  margin: 0;
+}
+
+@media (prefers-contrast: more) {
+  .mg-cell--absent,
+  .mg-key--absent {
+    color: var(--mg-color-text);
+  }
+}
+
+@media (forced-colors: active) {
+  .mg-cell--in_place .mg-cell__letter {
+    forced-color-adjust: none;
+    background: CanvasText;
+    color: Canvas;
+  }
+  .mg-key--in_place {
+    outline: 3px solid Highlight;
+  }
+}

@@ -4,6 +4,7 @@ import type { GroupsGame } from '../../react';
 import { GroupCard } from './GroupCard';
 import { Tile } from './Tile';
 import './tokens.css';
+import './board.css';
 import './GroupsBoard.css';
 
 export interface GroupsBoardProps {

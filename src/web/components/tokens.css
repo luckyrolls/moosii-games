@@ -45,6 +45,15 @@
   --mg-group-4: #d8c3a0; /* sand */
   --mg-group-text: #24211d;
 
+  /* Word game letter marks. Always paired with a shape: filled disc, ring, or dash. */
+  --mg-mark-in-place: #1d5bb8; /* blue disc */
+  --mg-mark-in-place-text: #ffffff;
+  --mg-mark-elsewhere: #b8560b; /* orange ring */
+  --mg-mark-absent-bg: #e3ddd2;
+  --mg-mark-absent-text: #5b554d;
+  --mg-cell-empty: #ffffff;
+  --mg-cell-border: #b9ae9d;
+
   --mg-transition: 150ms ease-out;
 }
 
@@ -64,6 +73,13 @@
     --mg-color-button-secondary: #262422;
     --mg-color-button-secondary-text: #f4efe8;
     --mg-color-focus: #8fb8ff;
+    --mg-mark-in-place: #6ea3f0;
+    --mg-mark-in-place-text: #10161f;
+    --mg-mark-elsewhere: #f0a35c;
+    --mg-mark-absent-bg: #2b2926;
+    --mg-mark-absent-text: #bdb5aa;
+    --mg-cell-empty: #262422;
+    --mg-cell-border: #6a6359;
   }
 }
 
@@ -74,6 +90,7 @@
     --mg-color-pattern: rgba(0, 0, 0, 0.45);
     --mg-border-width: 3px;
     --mg-focus-ring: 4px solid var(--mg-color-focus);
+    --mg-cell-border: var(--mg-color-text);
   }
 }
 

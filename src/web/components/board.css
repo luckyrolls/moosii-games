@@ -1,0 +1,127 @@
+/* Shared board chrome: layout, header, status, messages, buttons, results. */
+.mg-board {
+  container-type: inline-size;
+  width: 100%;
+  font-family: var(--mg-font-family);
+  font-size: var(--mg-font-size);
+  line-height: var(--mg-line-height);
+  color: var(--mg-color-text);
+  display: flex;
+  flex-direction: column;
+  gap: var(--mg-space-4);
+  max-width: 36rem;
+  margin: 0 auto;
+}
+
+.mg-board *,
+.mg-board *::before,
+.mg-board *::after {
+  box-sizing: border-box;
+}
+
+.mg-board__header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mg-space-1);
+}
+
+.mg-board__name {
+  margin: 0;
+  font-size: var(--mg-font-size-title);
+  line-height: 1.2;
+}
+
+.mg-board__title {
+  margin: 0;
+  color: var(--mg-color-text-muted);
+}
+
+.mg-board__instructions {
+  margin: 0;
+}
+
+/* ---------- Status, messages and controls ---------- */
+
+.mg-status {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--mg-space-2);
+  color: var(--mg-color-text-muted);
+}
+
+.mg-message {
+  min-height: 1.5em;
+  margin: 0;
+  font-weight: 600;
+}
+
+.mg-controls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--mg-space-2);
+}
+
+.mg-button {
+  min-height: var(--mg-tap-min);
+  padding: var(--mg-space-2) var(--mg-space-4);
+  border-radius: 999px;
+  border: var(--mg-border-width) solid var(--mg-color-button);
+  background: var(--mg-color-button);
+  color: var(--mg-color-button-text);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.mg-button--secondary {
+  background: var(--mg-color-button-secondary);
+  color: var(--mg-color-button-secondary-text);
+}
+
+.mg-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.mg-button--wide {
+  grid-column: 1 / -1;
+}
+
+.mg-button:focus-visible,
+.mg-results__heading:focus-visible {
+  outline: var(--mg-focus-ring);
+  outline-offset: 3px;
+}
+
+/* ---------- Results ---------- */
+
+.mg-results {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mg-space-3);
+  padding: var(--mg-space-4);
+  border-radius: var(--mg-radius);
+  border: var(--mg-border-width) solid var(--mg-color-border);
+  background: var(--mg-color-surface);
+}
+
+.mg-results__heading {
+  margin: 0;
+  font-size: var(--mg-font-size-title);
+}
+
+.mg-results__share {
+  margin: 0;
+  font-size: 1.5rem;
+  line-height: 1.25;
+  letter-spacing: 0.1em;
+  white-space: pre;
+}
+
+@media (prefers-contrast: more) {
+  .mg-button:disabled {
+    opacity: 1;
+    border-style: dashed;
+  }
+}
