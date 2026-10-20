@@ -1,15 +1,28 @@
-# Groups puzzle schema (v1)
+# Puzzle schemas
 
-This document is the **contract** for "groups" puzzle files and for the completion event the
-game emits. Puzzle authoring tools, the Moosii backend and every renderer (web, React Native)
-depend on it. The TypeScript types in [`src/core/types.ts`](../src/core/types.ts) and the
-runtime validator in [`src/core/validate.ts`](../src/core/validate.ts) implement exactly this
-document; a compile-time check in `validate.ts` fails the build if the two drift apart.
+This document is the **contract** for puzzle files and for the completion events the games
+emit. Puzzle authoring tools, the Moosii backend and every renderer (web, React Native)
+depend on it. Each game's TypeScript types and runtime validator implement exactly what is
+written here, and a compile-time check in each validator fails the build if the two drift apart:
 
-Changing anything here is a breaking change: bump `schema_version` and update the types,
-validator, tests and this file together.
+| Game | Types | Validator |
+| --- | --- | --- |
+| `groups` | [`src/core/types.ts`](../src/core/types.ts) | [`src/core/validate.ts`](../src/core/validate.ts) |
+| `word` | [`src/core/word/types.ts`](../src/core/word/types.ts) | [`src/core/word/validate.ts`](../src/core/word/validate.ts) |
 
-## Puzzle file
+Changing anything here is a breaking change: bump that game's `schema_version` and update the
+types, validator, tests and this file together.
+
+**Shared text rules** (both games): player-facing text must be non-blank and must not start or
+end with whitespace (rejected, never trimmed); fields noted as "blank-free" must also not
+contain a run of 2+ underscores. Unknown fields are rejected. Values are never transformed.
+Errors are reported as `path: message`, all at once.
+
+---
+
+# Groups (`game: "groups"`, v1)
+
+## Groups puzzle file
 
 ```ts
 interface GroupsPuzzle {
@@ -84,7 +97,7 @@ Validation reports every problem it finds, each as `path: message`, for example
 }
 ```
 
-## Completion event
+## Groups completion event
 
 Emitted once, through the `onComplete` callback of `useGroupsGame`, when a game ends. The
 game never sends it anywhere; the host app decides what to do with it.
@@ -113,7 +126,7 @@ interface GroupsCompletionEvent {
 
 **The event carries no points, score or reward fields.** Points are awarded server-side later.
 
-## Share text
+## Groups share text
 
 The share grid is one row per submitted guess, four squares per row, each square showing
 which group (by difficulty) that guessed item belonged to:
@@ -127,9 +140,124 @@ which group (by difficulty) that guessed item belonged to:
 
 It contains no item text, no labels, no title and no score.
 
-## Game rules the contract assumes
+## Groups rules the contract assumes
 
 - Mistake limit is a config value, `maxMistakes: number | null`. `null` (the default) is
   relaxed mode: the game never ends on mistakes.
 - A guess with exactly three items from one group is reported as "one away".
+- There are no timers.
+
+---
+
+# Word (`game: "word"`, v1)
+
+A single-word puzzle tied to exactly one lesson or activity the person has done or is on.
+Daily selection is decided elsewhere; this contract only covers one puzzle.
+
+## Word puzzle file
+
+```ts
+interface WordPuzzle {
+  schema_version: 1;
+  game: "word";
+  puzzle_id: string;
+  domain: "moosii" | "financial" | "cancer";
+  title: string;
+  answer: string;              // A–Z uppercase only, 4–8 letters
+  hint: string;
+  takeaway: string;
+  source_lesson_id?: string;   // exactly one of these two is present
+  source_activity_id?: string;
+  makes_health_claim: boolean; // covers hint + takeaway
+}
+```
+
+| Field | Type | Rules |
+| --- | --- | --- |
+| `schema_version` | `1` | Must be exactly `1`. |
+| `game` | `"word"` | Must be exactly `"word"`. |
+| `puzzle_id` | string | Required, not blank. Identifies the puzzle in completion events. |
+| `domain` | `"moosii"` \| `"financial"` \| `"cancer"` | Same meaning as for Groups. |
+| `title` | string | Required, not blank, no leading/trailing whitespace. Shown to the player. |
+| `answer` | string | Only the letters `A`–`Z`, uppercase, 4–8 of them. No spaces, accents, digits or punctuation. |
+| `hint` | string | Required, not blank, no leading/trailing whitespace, blank-free (no `__`). Shown when the player asks for it, and at the end. |
+| `takeaway` | string | Required, not blank, no leading/trailing whitespace, blank-free. Shown prominently when the game ends. |
+| `source_lesson_id` | string, optional | Not blank if present. |
+| `source_activity_id` | string, optional | Not blank if present. |
+| `makes_health_claim` | boolean | Required. Covers both `hint` and `takeaway`; `true` flags the puzzle for clinical review. |
+
+### Cross-field rules
+
+- **Exactly one of `source_lesson_id` / `source_activity_id`.** Neither, or both, is an error:
+  `puzzle: must have exactly one of source_lesson_id or source_activity_id (both given)`.
+- **No unknown fields.**
+- The answer does **not** need to appear in the guess dictionary; it is always accepted as a guess.
+
+### Example
+
+```json
+{
+  "schema_version": 1,
+  "game": "word",
+  "puzzle_id": "fixture-word-financial-01",
+  "domain": "financial",
+  "title": "Planning your money",
+  "answer": "BUDGET",
+  "hint": "A plan for where your money goes",
+  "takeaway": "A budget is a plan, not a judgment.",
+  "source_lesson_id": "fixture-lesson-budget",
+  "makes_health_claim": false
+}
+```
+
+## Word completion event
+
+Emitted once through `useWordGame`'s `onComplete` when a game ends. Never sent anywhere by the game.
+
+```ts
+interface WordCompletionEvent {
+  schema_version: 1;
+  game: "word";
+  puzzle_id: string;
+  outcome: "solved" | "revealed";
+  guesses_count: number;
+  hint_used: boolean;
+  completed_local_date: string; // "YYYY-MM-DD"
+}
+```
+
+| Field | Meaning |
+| --- | --- |
+| `schema_version` | Version of the event shape (independent of the puzzle `schema_version`). Currently `1`. |
+| `outcome` | `"solved"`: the player typed the answer. `"revealed"`: the guess limit ran out, or the player chose "Show answer". |
+| `guesses_count` | Accepted guesses, including the solving guess. Too-short, not-in-dictionary and repeated guesses don't count. |
+| `hint_used` | Whether the player opened the hint before the game ended. |
+| `completed_local_date` | The player's local calendar date (device time zone) when the game ended. |
+
+**No points, score or reward fields, and no guessed words or answer.**
+
+## Word share text
+
+One row per accepted guess, one symbol per letter:
+
+| Mark | Symbol | Meaning |
+| --- | --- | --- |
+| `in_place` | 🔵 | Right letter, right spot. |
+| `elsewhere` | 🟠 | In the word, but in another spot. |
+| `absent` | ⚪ | Not in the word (or no unmatched copies left). |
+
+No letters, no word, no score. 🟩 🟨 ⬜ ⬛ are never used.
+
+## Word rules the contract assumes
+
+- **Scoring with repeated letters:** exact matches are credited first. Each remaining guessed
+  letter, left to right, is `elsewhere` only while the answer still has an unmatched copy of
+  it; otherwise `absent`. Example: answer `PACING`, guess `AAAAAA` → `absent, in_place, absent,
+  absent, absent, absent`.
+- **Dictionary:** the host injects `isValidWord(word)`. A guess it rejects shows a message and
+  doesn't use a turn. The answer is always accepted.
+- **Repeated guess:** shows a message and doesn't use a turn.
+- **Guess limit:** config `maxGuesses: number | null`. `null` (default) is unlimited.
+- **Hint:** can be opened once; recorded as `hint_used`.
+- **Keyboard marks:** each letter shows the best mark seen so far (`in_place` > `elsewhere` > `absent`).
 - There are no timers.
