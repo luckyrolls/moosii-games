@@ -6,9 +6,9 @@ const playable = fixtures.filter((f) => !f.path.startsWith('fixtures/invalid/'))
 const invalid = fixtures.filter((f) => f.path.startsWith('fixtures/invalid/'));
 
 describe('fixtures', () => {
-  it('has one playable fixture per domain', () => {
-    const domains = playable.map((f) => (f.data as { domain: string }).domain).sort();
-    expect(domains).toEqual([...DOMAINS].sort());
+  it('has at least one playable fixture per domain', () => {
+    const domains = new Set(playable.map((f) => (f.data as { domain: string }).domain));
+    for (const domain of DOMAINS) expect(domains, `no fixture for "${domain}"`).toContain(domain);
   });
 
   it.each(playable.map((f) => [f.path, f.data] as const))(

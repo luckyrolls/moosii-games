@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "game": "groups",
+  "puzzle_id": "fixture-cancer-before-scan-01",
+  "domain": "cancer",
+  "title": "The day before your scan (FIXTURE — NOT REVIEWED CONTENT)",
+  "groups": [
+    { "label": "Pack for scan day", "difficulty": 1,
+      "items": ["ID card", "Insurance card", "Snack", "Phone charger"],
+      "source_lesson_ids": [], "makes_health_claim": false },
+    { "label": "Things to do while you wait", "difficulty": 2,
+      "items": ["Slow breathing", "Short walk", "Favorite music", "Call a friend"],
+      "source_lesson_ids": [], "makes_health_claim": false },
+    { "label": "Ask your care team", "difficulty": 3,
+      "items": ["Results timing", "Who will call", "Next steps", "Care plan"],
+      "source_lesson_ids": [], "makes_health_claim": false },
+    { "label": "Plans for after", "difficulty": 4,
+      "items": ["Coffee date", "Movie night", "Favorite meal", "Day trip"],
+      "source_lesson_ids": [], "makes_health_claim": false }
+  ]
+}
