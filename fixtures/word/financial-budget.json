@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "game": "word",
+  "puzzle_id": "fixture-word-financial-01",
+  "domain": "financial",
+  "title": "Planning your money (FIXTURE — NOT REVIEWED CONTENT)",
+  "answer": "BUDGET",
+  "hint": "A plan for where your money goes",
+  "takeaway": "A budget is a plan, not a judgment.",
+  "source_lesson_id": "fixture-lesson-budget",
+  "makes_health_claim": false
+}

@@ -1,40 +1,28 @@
-import { useMemo, useState } from 'react';
-import { validatePuzzle, type GroupsCompletionEvent, type GroupsPuzzle } from '../../core';
-import { useGroupsGame } from '../../react';
-import { GroupsBoard } from '../components';
-import { fixtures } from './fixtures';
+import { useState } from 'react';
+import { GAME_DISPLAY_NAME, WORD_DISPLAY_NAME } from '../../core';
+import { GroupsPlayground } from './GroupsPlayground';
+import { WordPlayground } from './WordPlayground';
 
-const CUSTOM = '__custom__';
-const MISTAKE_OPTIONS = [
-  { value: 'relaxed', label: 'Relaxed (no limit)' },
-  { value: '4', label: '4 mistakes' },
-  { value: '2', label: '2 mistakes' },
+type GameChoice = 'groups' | 'word';
+
+const GAMES: { value: GameChoice; label: string }[] = [
+  { value: 'groups', label: GAME_DISPLAY_NAME },
+  { value: 'word', label: WORD_DISPLAY_NAME },
 ];
 
-type Parsed = { ok: true; puzzle: GroupsPuzzle } | { ok: false; errors: string[] };
-
-function parseCustom(text: string): Parsed {
-  if (!text.trim()) return { ok: false, errors: ['Paste a puzzle JSON document above.'] };
-  try {
-    return validatePuzzle(JSON.parse(text));
-  } catch (err) {
-    return { ok: false, errors: [`Not valid JSON: ${(err as Error).message}`] };
-  }
+function initialGame(): GameChoice {
+  return new URLSearchParams(window.location.search).get('game') === 'word' ? 'word' : 'groups';
 }
 
 export function App() {
-  const [source, setSource] = useState(fixtures[0]?.path ?? CUSTOM);
-  const [customText, setCustomText] = useState('');
-  const [mistakeSetting, setMistakeSetting] = useState('relaxed');
-  const maxMistakes = mistakeSetting === 'relaxed' ? null : Number(mistakeSetting);
-  const [round, setRound] = useState(0);
+  const [game, setGame] = useState<GameChoice>(initialGame);
 
-  const parsed = useMemo<Parsed>(() => {
-    if (source === CUSTOM) return parseCustom(customText);
-    const entry = fixtures.find((f) => f.path === source);
-    if (!entry) return { ok: false, errors: [`Fixture ${source} not found.`] };
-    return validatePuzzle(entry.data);
-  }, [source, customText]);
+  function choose(next: GameChoice) {
+    setGame(next);
+    const url = new URL(window.location.href);
+    url.searchParams.set('game', next);
+    window.history.replaceState(null, '', url);
+  }
 
   return (
     <div className="pg">
@@ -43,87 +31,23 @@ export function App() {
         <p className="pg-note">Test scaffolding. Fixtures are not reviewed content.</p>
       </header>
 
-      <fieldset className="pg-controls">
-        <legend>Setup</legend>
-        <label className="pg-field">
-          <span>Puzzle</span>
-          <select value={source} onChange={(e) => setSource(e.target.value)}>
-            {fixtures.map((f) => (
-              <option key={f.path} value={f.path}>
-                {f.path}
-              </option>
-            ))}
-            <option value={CUSTOM}>Paste JSON…</option>
-          </select>
-        </label>
-        <label className="pg-field">
-          <span>Mistake limit</span>
-          <select value={mistakeSetting} onChange={(e) => setMistakeSetting(e.target.value)}>
-            {MISTAKE_OPTIONS.map((o) => (
-              <option key={o.value} value={o.value}>
-                {o.label}
-              </option>
-            ))}
-          </select>
-        </label>
-        <button type="button" className="pg-button" onClick={() => setRound((r) => r + 1)}>
-          Restart
-        </button>
-        {source === CUSTOM && (
-          <label className="pg-field pg-field--wide">
-            <span>Puzzle JSON</span>
-            <textarea
-              rows={8}
-              value={customText}
-              onChange={(e) => setCustomText(e.target.value)}
-              spellCheck={false}
+      <fieldset className="pg-controls pg-games">
+        <legend>Game</legend>
+        {GAMES.map((g) => (
+          <label key={g.value} className="pg-radio">
+            <input
+              type="radio"
+              name="pg-game"
+              value={g.value}
+              checked={game === g.value}
+              onChange={() => choose(g.value)}
             />
+            <span>{g.label}</span>
           </label>
-        )}
+        ))}
       </fieldset>
 
-      {parsed.ok ? (
-        <Game key={`${source}|${parsed.puzzle.puzzle_id}|${mistakeSetting}|${round}`} puzzle={parsed.puzzle} maxMistakes={maxMistakes} />
-      ) : (
-        <div className="pg-error" role="alert">
-          <h2>This puzzle can’t be played</h2>
-          <p>
-            <code>{source === CUSTOM ? 'Pasted JSON' : source}</code> failed validation:
-          </p>
-          <ul>
-            {parsed.errors.map((e) => (
-              <li key={e}>
-                <code>{e}</code>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      {game === 'groups' ? <GroupsPlayground /> : <WordPlayground />}
     </div>
-  );
-}
-
-function Game({ puzzle, maxMistakes }: { puzzle: GroupsPuzzle; maxMistakes: number | null }) {
-  const [received, setReceived] = useState<GroupsCompletionEvent[]>([]);
-  const game = useGroupsGame(puzzle, {
-    maxMistakes,
-    onComplete: (event) => setReceived((list) => [...list, event]),
-  });
-
-  return (
-    <>
-      <GroupsBoard game={game} />
-      {game.isComplete && (
-        <section className="pg-output" aria-label="Completion output">
-          <h2>Completion event</h2>
-          <p className="pg-note">
-            Delivered to <code>onComplete</code> {received.length} time{received.length === 1 ? '' : 's'}. Not sent anywhere.
-          </p>
-          <pre className="pg-code">{JSON.stringify(game.completionEvent, null, 2)}</pre>
-          <h2>Share text</h2>
-          <pre className="pg-code">{game.shareText || '(no guesses)'}</pre>
-        </section>
-      )}
-    </>
   );
 }

@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "game": "word",
+  "puzzle_id": "fixture-word-cancer-01",
+  "domain": "cancer",
+  "title": "Your energy (FIXTURE — NOT REVIEWED CONTENT)",
+  "answer": "PACING",
+  "hint": "Not pushing — spreading your energy out",
+  "takeaway": "Pacing means planning your day around your energy.",
+  "source_lesson_id": "fixture-lesson-pacing",
+  "makes_health_claim": false
+}

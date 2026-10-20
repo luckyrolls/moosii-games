@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "game": "word",
+  "puzzle_id": "fixture-word-moosii-01",
+  "domain": "moosii",
+  "title": "Calming your baby (FIXTURE — NOT REVIEWED CONTENT)",
+  "answer": "SOOTHE",
+  "hint": "What you do for a crying baby",
+  "takeaway": "Soothing can be as simple as a calm voice and a gentle hold.",
+  "source_lesson_id": "fixture-lesson-soothing",
+  "makes_health_claim": false
+}

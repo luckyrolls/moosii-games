@@ -119,3 +119,35 @@ body {
   background: var(--mg-color-surface, #fff);
   font-size: 1.125rem;
 }
+
+.pg-games {
+  align-items: center;
+}
+
+.pg-radio {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0 0.75rem;
+  border-radius: 0.5rem;
+  border: 2px solid var(--mg-color-border, #cfc6b8);
+  background: var(--mg-color-surface, #fff);
+  cursor: pointer;
+}
+
+.pg-radio input {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin: 0;
+}
+
+.pg-radio:has(input:checked) {
+  border-color: currentColor;
+  font-weight: 700;
+}
+
+.pg-radio:has(input:focus-visible) {
+  outline: 3px solid var(--mg-color-focus, #1f5fbf);
+  outline-offset: 2px;
+}

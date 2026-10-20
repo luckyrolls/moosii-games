@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "game": "word",
+  "puzzle_id": "fixture-word-invalid-01",
+  "domain": "financial",
+  "title": "Deliberately invalid, tests the error screen (FIXTURE — NOT REVIEWED CONTENT)",
+  "answer": "Budget",
+  "hint": "A ___ for where your money goes",
+  "takeaway": "A budget is a plan, not a judgment. ",
+  "source_lesson_id": "fixture-lesson-budget",
+  "source_activity_id": "fixture-activity-budget",
+  "makes_health_claim": false
+}
