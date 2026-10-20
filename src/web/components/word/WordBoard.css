@@ -172,10 +172,36 @@
   color: var(--mg-mark-elsewhere);
 }
 
+/*
+ * Absent (used up): a hollow key with a faded letter and a diagonal slash, so letters that
+ * are no longer worth trying stand out from untried keys at a glance. The slash is a shape
+ * cue, so this never relies on colour alone.
+ */
 .mg-key--absent {
-  background: var(--mg-mark-absent-bg);
+  background: transparent;
   color: var(--mg-mark-absent-text);
   border-style: dashed;
+  font-weight: 500;
+}
+
+.mg-key--absent::after {
+  content: '';
+  position: absolute;
+  inset: 0.35rem;
+  pointer-events: none;
+  background: linear-gradient(
+    to top right,
+    transparent calc(50% - 1px),
+    currentColor calc(50% - 1px),
+    currentColor calc(50% + 1px),
+    transparent calc(50% + 1px)
+  );
+  opacity: 0.7;
+}
+
+/* The slash already says "absent"; the corner dash would just add clutter. */
+.mg-key--absent .mg-mark-icon {
+  display: none;
 }
 
 .mg-keyboard__actions {
@@ -248,6 +274,9 @@
   .mg-cell--absent,
   .mg-key--absent {
     color: var(--mg-color-text);
+  }
+  .mg-key--absent::after {
+    opacity: 1;
   }
 }
 
