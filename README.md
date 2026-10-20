@@ -42,6 +42,8 @@ src/
     wordlist/        Lazily loaded guess dictionary (ENABLE).        REUSABLE (web hosts)
     playground/      Game + puzzle picker, fixtures, event display.  SCAFFOLDING ONLY
 fixtures/            Example puzzles (not reviewed content). Word puzzles in fixtures/word/.
+examples/rn/         Throwaway Expo app proving core + react run in React Native. Standalone;
+                     not part of the root build, lint, tests or deploy. See its README.
 docs/puzzle-schema.md  The puzzle + completion event contract.
 ```
 

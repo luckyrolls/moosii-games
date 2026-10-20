@@ -42,7 +42,8 @@ const NO_WEB_LAYER = {
 };
 
 export default tseslint.config(
-  { ignores: ['dist', 'node_modules', 'coverage'] },
+  // examples/ are standalone apps with their own tooling; not part of the root build.
+  { ignores: ['dist', 'node_modules', 'coverage', 'examples'] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.strict],
     files: ['**/*.{ts,tsx,js}'],
