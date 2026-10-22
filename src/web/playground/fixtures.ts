@@ -21,3 +21,8 @@ export const fixtures: FixtureEntry[] = toEntries(
 export const wordFixtures: FixtureEntry[] = toEntries(
   import.meta.glob<unknown>(['/fixtures/word/*.json', '/fixtures/word/invalid/*.json'], { eager: true, import: 'default' }),
 );
+
+/** Take a Moment config: fixtures/moment/*.json and fixtures/moment/invalid/*.json. */
+export const momentFixtures: FixtureEntry[] = toEntries(
+  import.meta.glob<unknown>(['/fixtures/moment/*.json', '/fixtures/moment/invalid/*.json'], { eager: true, import: 'default' }),
+);

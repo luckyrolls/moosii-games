@@ -1,7 +1,15 @@
-export function ValidationErrors({ source, errors }: { source: string; errors: string[] }) {
+export function ValidationErrors({
+  source,
+  errors,
+  heading = 'This puzzle can’t be played',
+}: {
+  source: string;
+  errors: string[];
+  heading?: string;
+}) {
   return (
     <div className="pg-error" role="alert">
-      <h2>This puzzle can’t be played</h2>
+      <h2>{heading}</h2>
       <p>
         <code>{source}</code> failed validation:
       </p>

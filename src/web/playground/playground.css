@@ -151,3 +151,64 @@ body {
   outline: 3px solid var(--mg-color-focus, #1f5fbf);
   outline-offset: 2px;
 }
+
+.pg-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.pg-section__heading {
+  margin: 0;
+  font-size: 1.375rem;
+}
+
+/* Take a Moment is visibly its own place, not another game. */
+.pg-moments {
+  margin-top: 1.5rem;
+  padding: 1.25rem 1rem;
+  border-radius: 1rem;
+  background: var(--mg-moment-bg, #f5f1ea);
+  border: 2px solid var(--mg-color-border, #cfc6b8);
+}
+
+.pg-moment-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.pg-moment-card {
+  width: 100%;
+  min-height: 44px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.875rem 1rem;
+  border-radius: 0.75rem;
+  border: 2px solid var(--mg-color-border, #cfc6b8);
+  background: var(--mg-color-surface, #fff);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.pg-moment-card__title {
+  font-weight: 700;
+}
+
+.pg-moment-card__blurb {
+  color: var(--mg-color-text-muted, #5b554d);
+}
+
+.pg-moment-card:focus-visible {
+  outline: 3px solid var(--mg-color-focus, #1f5fbf);
+  outline-offset: 2px;
+}
+
+.pg--moment {
+  padding-top: 1rem;
+}
