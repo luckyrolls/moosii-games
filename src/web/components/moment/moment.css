@@ -1,0 +1,451 @@
+/*
+ * Take a Moment. Calm, roomy, no goals. Animation is CSS only; under prefers-reduced-motion,
+ * scaling and travel are replaced by gentle opacity/colour fades.
+ */
+
+:root {
+  --mg-moment-bg: #f5f1ea;
+  --mg-petal-outer: #b9a3d9; /* lilac */
+  --mg-petal-inner: #f2b98f; /* peach */
+  --mg-petal-centre: #e2b24a; /* honey */
+  --mg-petal-edge: #5d4a7a;
+  --mg-water-top: #c7dfe9;
+  --mg-water-bottom: #94bcd1;
+  --mg-ripple-ring: rgba(255, 255, 255, 0.95);
+  --mg-ripple-shade: rgba(22, 64, 92, 0.45);
+  --mg-leaf: #b9853b;
+  --mg-leaf-vein: #6e4a17;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --mg-moment-bg: #22201e;
+    --mg-water-top: #2c4a5a;
+    --mg-water-bottom: #1d3442;
+    --mg-ripple-ring: rgba(235, 245, 250, 0.9);
+    --mg-ripple-shade: rgba(0, 0, 0, 0.5);
+  }
+}
+
+.mg-moment {
+  box-sizing: border-box;
+  container-type: inline-size;
+  width: 100%;
+  max-width: 36rem;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--mg-space-4);
+  padding: var(--mg-space-4);
+  border-radius: var(--mg-radius);
+  background: var(--mg-moment-bg);
+  color: var(--mg-color-text);
+  font-family: var(--mg-font-family);
+  font-size: var(--mg-font-size);
+  line-height: var(--mg-line-height);
+}
+
+.mg-moment *,
+.mg-moment *::before,
+.mg-moment *::after {
+  box-sizing: border-box;
+}
+
+.mg-moment__bar {
+  display: flex;
+  align-items: center;
+  gap: var(--mg-space-3);
+  flex-wrap: wrap;
+}
+
+.mg-moment__back {
+  min-height: var(--mg-tap-min);
+  min-width: var(--mg-tap-min);
+  padding: 0 var(--mg-space-4);
+  border-radius: 999px;
+  border: var(--mg-border-width) solid var(--mg-color-text);
+  background: var(--mg-color-surface);
+  color: var(--mg-color-text);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.mg-moment__title {
+  margin: 0;
+  font-size: var(--mg-font-size-title);
+}
+
+.mg-moment__note {
+  margin: 0;
+  color: var(--mg-color-text-muted);
+}
+
+.mg-moment__back:focus-visible,
+.mg-moment .mg-button:focus-visible,
+.mg-chip:has(input:focus-visible),
+.mg-pond:focus-visible,
+.mg-grounding__heading:focus-visible {
+  outline: var(--mg-focus-ring);
+  outline-offset: 3px;
+}
+
+.mg-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ---------- Chips (radio choices) ---------- */
+
+.mg-chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--mg-space-2);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.mg-chips legend {
+  padding: 0;
+  margin-bottom: var(--mg-space-2);
+  font-weight: 700;
+}
+
+.mg-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--mg-space-2);
+  min-height: var(--mg-tap-min);
+  padding: var(--mg-space-1) var(--mg-space-3);
+  border-radius: 999px;
+  border: var(--mg-border-width) solid var(--mg-color-border);
+  background: var(--mg-color-surface);
+  cursor: pointer;
+}
+
+.mg-chip input {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin: 0;
+  accent-color: var(--mg-color-button);
+}
+
+.mg-chip:has(input:checked) {
+  border-color: var(--mg-color-text);
+  font-weight: 700;
+}
+
+/* ---------- Breathing Garden ---------- */
+
+.mg-breath {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--mg-space-4);
+  text-align: center;
+}
+
+.mg-breath .mg-chips {
+  justify-content: center;
+}
+
+.mg-breath .mg-chips legend {
+  width: 100%;
+  text-align: center;
+}
+
+.mg-flower {
+  --mg-breath-ms: 4000ms;
+  width: min(70cqi, 18rem);
+  aspect-ratio: 1;
+}
+
+.mg-flower__svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.mg-flower__outer,
+.mg-flower__inner,
+.mg-flower__centre {
+  transform-box: view-box;
+  transform-origin: 50% 50%;
+  transition:
+    transform var(--mg-breath-ms) ease-in-out,
+    opacity var(--mg-breath-ms) ease-in-out,
+    fill var(--mg-breath-ms) ease-in-out;
+}
+
+.mg-flower__outer ellipse {
+  fill: var(--mg-petal-outer);
+  stroke: var(--mg-petal-edge);
+  stroke-width: 1.5;
+}
+
+.mg-flower__inner ellipse {
+  fill: var(--mg-petal-inner);
+  stroke: var(--mg-petal-edge);
+  stroke-width: 1.2;
+}
+
+.mg-flower__centre {
+  fill: var(--mg-petal-centre);
+  stroke: var(--mg-petal-edge);
+  stroke-width: 1.5;
+}
+
+/* Closed (breathing out, paused after, or resting). */
+.mg-flower__outer {
+  transform: scale(0.42) rotate(-12deg);
+}
+.mg-flower__inner {
+  transform: scale(0.55) rotate(10deg);
+}
+.mg-flower__centre {
+  transform: scale(0.8);
+}
+
+/* Open (breathing in, paused after). */
+.mg-flower[data-open='true'] .mg-flower__outer {
+  transform: scale(1) rotate(0deg);
+}
+.mg-flower[data-open='true'] .mg-flower__inner {
+  transform: scale(0.95) rotate(0deg);
+}
+.mg-flower[data-open='true'] .mg-flower__centre {
+  transform: scale(1);
+}
+
+/* Not started: a resting flower, no transition when settling back. */
+.mg-flower[data-running='false'] .mg-flower__outer,
+.mg-flower[data-running='false'] .mg-flower__inner,
+.mg-flower[data-running='false'] .mg-flower__centre {
+  transition-duration: 1.2s;
+}
+
+.mg-breath__phase {
+  margin: 0;
+  min-height: 1.4em;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.mg-breath__primary .mg-button {
+  min-width: 10rem;
+}
+
+.mg-pace {
+  gap: var(--mg-space-3);
+}
+
+.mg-pace__text {
+  min-width: 9rem;
+  font-weight: 600;
+}
+
+/* Reduced motion: no scaling or turning, a gentle fade between dim and full colour instead. */
+@media (prefers-reduced-motion: reduce) {
+  .mg-flower__outer,
+  .mg-flower__inner,
+  .mg-flower__centre,
+  .mg-flower[data-open='true'] .mg-flower__outer,
+  .mg-flower[data-open='true'] .mg-flower__inner,
+  .mg-flower[data-open='true'] .mg-flower__centre {
+    transform: scale(0.85);
+  }
+  .mg-flower__outer,
+  .mg-flower__inner {
+    opacity: 0.35;
+  }
+  .mg-flower[data-open='true'] .mg-flower__outer,
+  .mg-flower[data-open='true'] .mg-flower__inner {
+    opacity: 1;
+  }
+}
+
+/* ---------- Ripple Pond ---------- */
+
+.mg-pond {
+  position: relative;
+  container-type: size;
+  width: 100%;
+  height: min(70svh, 34rem);
+  min-height: 18rem;
+  overflow: hidden;
+  border-radius: 1.5rem;
+  border: var(--mg-border-width) solid var(--mg-color-border);
+  background: linear-gradient(180deg, var(--mg-water-top), var(--mg-water-bottom));
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mg-ripple {
+  position: absolute;
+  width: var(--mg-ripple-size);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 3px solid var(--mg-ripple-ring);
+  box-shadow:
+    0 0 0 1px var(--mg-ripple-shade),
+    inset 0 0 0 1px var(--mg-ripple-shade);
+  pointer-events: none;
+  translate: -50% -50%;
+  opacity: 0;
+  animation: mg-ripple-grow var(--mg-ripple-ms) cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+@keyframes mg-ripple-grow {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  45% {
+    opacity: 0.75;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+.mg-leaf {
+  position: absolute;
+  width: 3.25rem;
+  translate: -50% -50%;
+  rotate: var(--mg-leaf-rot);
+  pointer-events: none;
+  transition:
+    left 1.6s cubic-bezier(0.22, 0.61, 0.36, 1),
+    top 1.6s cubic-bezier(0.22, 0.61, 0.36, 1),
+    rotate 1.6s ease-out;
+}
+
+.mg-leaf__drift {
+  display: block;
+  animation: mg-leaf-drift 19s ease-in-out infinite alternate;
+}
+
+.mg-leaf svg {
+  display: block;
+  width: 100%;
+  fill: var(--mg-leaf);
+  stroke: var(--mg-leaf-vein);
+  stroke-width: 1.2;
+}
+
+.mg-leaf__vein {
+  fill: none;
+}
+
+@keyframes mg-leaf-drift {
+  0% {
+    transform: translate(-0.6rem, -0.3rem) rotate(-6deg);
+  }
+  50% {
+    transform: translate(0.4rem, 0.5rem) rotate(4deg);
+  }
+  100% {
+    transform: translate(0.7rem, -0.4rem) rotate(7deg);
+  }
+}
+
+.mg-pond__cursor {
+  position: absolute;
+  width: 2.75rem;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  border-radius: 50%;
+  border: 3px dashed var(--mg-color-text);
+  pointer-events: none;
+  display: none;
+}
+
+.mg-pond:focus-visible .mg-pond__cursor {
+  display: block;
+}
+
+/* Reduced motion: ripples fade in place at a small fixed size; leaves stay still. */
+@media (prefers-reduced-motion: reduce) {
+  .mg-ripple {
+    width: var(--mg-ripple-size-reduced);
+    animation-name: mg-ripple-fade;
+    animation-timing-function: linear;
+  }
+  .mg-leaf {
+    transition: none;
+  }
+  .mg-leaf__drift {
+    animation: none;
+  }
+}
+
+@keyframes mg-ripple-fade {
+  0% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* ---------- Grounding ---------- */
+
+.mg-grounding {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--mg-space-3);
+  padding: var(--mg-space-6) var(--mg-space-4);
+  border-radius: var(--mg-radius);
+  background: var(--mg-color-surface);
+  border: var(--mg-border-width) solid var(--mg-color-border);
+  text-align: center;
+}
+
+.mg-grounding__count {
+  margin: 0;
+  width: 5rem;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 3px solid var(--mg-color-text);
+  font-size: 2.75rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.mg-grounding__heading {
+  margin: 0;
+  font-size: 1.75rem;
+  line-height: 1.25;
+}
+
+.mg-grounding__prompt {
+  margin: 0;
+  font-size: 1.375rem;
+  line-height: 1.5;
+  max-width: 28rem;
+}
+
+@media (prefers-contrast: more) {
+  .mg-ripple {
+    border-width: 4px;
+  }
+  .mg-flower__outer ellipse,
+  .mg-flower__inner ellipse,
+  .mg-flower__centre {
+    stroke-width: 2.5;
+  }
+}
