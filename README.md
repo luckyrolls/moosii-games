@@ -9,6 +9,9 @@ isolation. Two games so far:
 
 Player-facing names come from `GAME_DISPLAY_NAME` / `WORD_DISPLAY_NAME` in `src/core` (placeholders).
 
+There is also **Take a Moment**, a separate relaxation section (not a daily game): Breathing
+Garden, Ripple Pond and Grounding (5-4-3-2-1). See [Take a Moment](#take-a-moment) below.
+
 This repo is the game logic, the shared React hook, the web components and a playground to try
 them. **Integration is out of scope here:** no backend calls, auth, points, streaks, scheduling
 or check-in handoff. Those come later, in other repos, against the contract in
@@ -36,9 +39,10 @@ npm run build     # type-check + production build into dist/
 src/
   core/              Pure TypeScript. No React, no DOM.             REUSABLE
     word/            Word of the Day engine, schema, scoring.        REUSABLE
+    moment/          Take a Moment: breathing, ripples, grounding.   REUSABLE
   react/             Shared hooks. React only; no react-dom, no DOM. REUSABLE (also React Native)
   web/
-    components/      DOM renderers (GroupsBoard, word/WordBoard).    REUSABLE (copy into moosii-reader)
+    components/      DOM renderers (GroupsBoard, word/, moment/).    REUSABLE (copy into moosii-reader)
     wordlist/        Lazily loaded guess dictionary (ENABLE).        REUSABLE (web hosts)
     playground/      Game + puzzle picker, fixtures, event display.  SCAFFOLDING ONLY
 fixtures/            Example puzzles (not reviewed content). Word puzzles in fixtures/word/.
@@ -121,6 +125,40 @@ function Word({ puzzle, isValidWord }) {
   return <WordBoard game={game} />;
 }
 ```
+
+## Take a Moment
+
+A separate, quiet section, deliberately **not** part of Daily Games. There are **no goals,
+scores, points, streaks, completion events or "finished" states**, by design: nothing is
+won, counted, saved or sent anywhere.
+
+| Activity | Core (`src/core/moment`) | Hook | Web component |
+| --- | --- | --- | --- |
+| Breathing Garden | `phaseAt(pattern, elapsed_ms)` → `{ phase, progress }`; pattern validator; pace steps | `useBreathing` | `BreathingGarden` |
+| Ripple Pond | `addRipple` / `tapPond` / `ripplesAt(t)` (age, radius, opacity), expiry, cap of 12, leaf nudges | `useRipples` | `RipplePond` |
+| Grounding | 5-4-3-2-1 script validator; next / back / restart | `useGrounding` | `Grounding` |
+
+- **Config is clinician-owned.** Breathing patterns (`fixtures/moment/breathing-patterns.json`)
+  and the grounding script (`fixtures/moment/grounding.json`) are loaded and validated at
+  runtime; the fixtures are marked "FIXTURE — PENDING CLINICIAN REVIEW". Breathing limits are
+  enforced: inhale/exhale 2–10 s, holds 0–2 s (no long breath-holding), unknown fields rejected.
+  Pace changes (Slower/Faster) only offer speeds that stay inside those limits.
+- **Wording** on screen is limited to "Breathe in", "Breathe out" and "Pause". No claims about
+  effects anywhere.
+- **Time.** The shared layers never touch timers. Hooks take an injected `MomentClock`
+  (`now()` + `after(ms, cb)`); the web provides `browserClock`, React Native its own. It only
+  paces breathing phases; there is no countdown on screen. Timed sessions (1 / 3 / 5 min) end
+  at the end of a breath, with no "done" message. "No timer" is the default.
+- **Animation** is plain CSS transitions/keyframes on web and core `Animated`
+  (`useNativeDriver`) in React Native; React only re-renders at phase changes and taps.
+  No canvas, Skia, Reanimated or audio.
+- **Reduced motion**: the flower fades between dim and full colour instead of scaling;
+  ripples fade in place at a small size; leaves stay still.
+- **Leaving**: every activity has an always-visible leave button ("Back", or "Stop anytime"
+  in Grounding).
+
+In the playground, Take a Moment is its own section below the games; `?moment=breathing`,
+`?moment=pond` or `?moment=grounding` opens one directly.
 
 ## Word list and its license
 

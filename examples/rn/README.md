@@ -52,6 +52,20 @@ The repo root does **not** need `npm install` for this app; everything resolves 
   (Android `accessibilityLiveRegion`, iOS `announceForAccessibility`), and a spoken
   description of each word guess.
 
+## Take a Moment
+
+The home screen has a **Take a Moment** section (separate from the games) with Breathing
+Garden, Ripple Pond and Grounding, driven by `useBreathing`, `useRipples` and `useGrounding`
+from the shared `src/react`, with configs from `fixtures/moment/`.
+
+- Animation is core `Animated` only, all with `useNativeDriver: true` (transform and
+  opacity), so it runs on the UI thread. The JS side only reacts at breathing phase changes
+  and taps.
+- The OS **Reduce Motion** setting is read live through `AccessibilityInfo`: the flower fades
+  instead of scaling, ripples fade in place, and leaves stop drifting.
+- To check reduced motion on a phone: iOS Settings → Accessibility → Motion → Reduce Motion;
+  Android Settings → Accessibility → Remove animations. You can change it while the app is open.
+
 ## Checks you can run without a phone
 
 ```bash

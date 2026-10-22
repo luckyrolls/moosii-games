@@ -64,8 +64,9 @@ layer instead of loosening `eslint.config.js` or `tsconfig.portable.json`.
 
 ## Design rules (hard requirements)
 
-- No timers anywhere: no countdowns, no time limits, no auto-dismissing messages, no
-  `setTimeout` / `requestAnimationFrame` tricks in components.
+- No timers in the puzzles: no countdowns, no time limits, no auto-dismissing messages, no
+  `setTimeout` / `requestAnimationFrame` tricks in components. The one scoped exception is
+  Take a Moment's pacing clock (see below).
 - Groups: solved or revealed groups are identified by label + a distinct icon + a distinct
   pattern, never colour alone. Word: every mark pairs a shape with its colour.
 - The palette must not rely on red vs green.
@@ -77,6 +78,28 @@ layer instead of loosening `eslint.config.js` or `tsconfig.portable.json`.
   rather than shrinking text below 18px.
 - Word keyboard: on narrow boards QWERTY halves stack five keys wide so keys stay >= 44px.
   Physical keyboard works too. Guess results are announced through an aria-live region.
+
+## Take a Moment (relaxation, not a game)
+
+- Lives in `src/core/moment/`, `useBreathing` / `useRipples` / `useGrounding`, and
+  `src/web/components/moment/`. Visibly separate from Daily Games in every host.
+- **No goals, scores, points, streaks, completion events or "finished" states, by design.**
+  Nothing is typed, saved or sent. Don't add an `onComplete`, a counter, a "well done" or a
+  progress bar that implies success or failure.
+- **Breathing patterns and the grounding script are clinician-owned config**, loaded from
+  `fixtures/moment/*.json` and validated (inhale/exhale 2–10 s, holds 0–2 s, unknown fields
+  rejected; grounding must be 5-4-3-2-1). Don't hard-code patterns or prompts in components.
+  Fixtures are marked "FIXTURE — PENDING CLINICIAN REVIEW".
+- On-screen breathing words are only "Breathe in", "Breathe out" and "Pause". No claims about
+  effects anywhere (copy, docs, comments, config).
+- **Time:** `src/core` and `src/react` stay timer-free; hooks take an injected `MomentClock`.
+  `src/web/components/moment/clock.ts` (and the RN example's `rnClock`) is the only place that
+  schedules anything, and only to pace breathing phases. Never show a countdown.
+- **Animation:** CSS transitions/keyframes on web, core `Animated` with `useNativeDriver` on
+  React Native. No new libraries (no canvas, Skia, Reanimated, audio). No sound in v1.
+- **Reduced motion:** flower fades instead of scaling; ripples fade in place; leaves still.
+- Always-visible way to leave; >= 44px targets; keyboard operable on web (the pond takes
+  arrows + Enter); no red/green reliance.
 
 ## Content
 
