@@ -8,3 +8,4 @@ export * from './completion';
 export * from './messages';
 export * from './word';
 export * from './date';
+export * from './moment';

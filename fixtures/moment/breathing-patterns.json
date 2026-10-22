@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "kind": "breathing_patterns",
+  "patterns": [
+    {
+      "id": "fixture-breath-4-0-6-0",
+      "label": "In for 4, out for 6 (FIXTURE — PENDING CLINICIAN REVIEW)",
+      "inhale_s": 4,
+      "hold_in_s": 0,
+      "exhale_s": 6,
+      "hold_out_s": 0
+    },
+    {
+      "id": "fixture-breath-5-0-5-0",
+      "label": "In for 5, out for 5 (FIXTURE — PENDING CLINICIAN REVIEW)",
+      "inhale_s": 5,
+      "hold_in_s": 0,
+      "exhale_s": 5,
+      "hold_out_s": 0
+    }
+  ]
+}

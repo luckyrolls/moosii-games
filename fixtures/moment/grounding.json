@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "kind": "grounding_script",
+  "title": "5-4-3-2-1 (FIXTURE — PENDING CLINICIAN REVIEW)",
+  "steps": [
+    {
+      "count": 5,
+      "heading": "Things you can see",
+      "prompt": "Look around you. Notice five things you can see, near or far."
+    },
+    {
+      "count": 4,
+      "heading": "Things you can hear or feel",
+      "prompt": "Listen, or notice your body. Find four things you can hear or feel."
+    },
+    {
+      "count": 3,
+      "heading": "Things you can touch",
+      "prompt": "Notice three things you can touch, like your sleeve or the seat beneath you."
+    },
+    {
+      "count": 2,
+      "heading": "Things you can smell",
+      "prompt": "Notice two things you can smell. If nothing comes, that is fine."
+    },
+    {
+      "count": 1,
+      "heading": "A taste or a kind thought",
+      "prompt": "Notice one thing you can taste, or think one kind thought about yourself."
+    }
+  ]
+}

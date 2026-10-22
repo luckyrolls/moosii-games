@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "kind": "breathing_patterns",
+  "patterns": [
+    {
+      "id": "fixture-breath-invalid",
+      "label": "Deliberately invalid (FIXTURE — PENDING CLINICIAN REVIEW)",
+      "inhale_s": 4,
+      "hold_in_s": 7,
+      "exhale_s": 12,
+      "hold_out_s": 0,
+      "calms_you_down": true
+    }
+  ]
+}
