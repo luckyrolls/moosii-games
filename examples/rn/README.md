@@ -105,11 +105,8 @@ ships:
 **Windows firewall and network profile.** The phone has to reach Node.js on this computer.
 Check that an inbound **Allow** rule for your `node.exe` covers the profile your Wi-Fi uses
 (Settings → Network & internet → Wi-Fi → your network → Network profile type). If you use
-nvm, the rule must name the real path (e.g. `D:
-vm20.20.2
-ode.exe`), not the
-`nvm4w
-odejs` link. For a home network, the usual setup is profile **Private** with Node.js
+nvm, the rule must name the real path (e.g. `D:\nvm\v20.20.2\node.exe`), not the
+`nvm4w\nodejs` link. For a home network, the usual setup is profile **Private** with Node.js
 allowed on Private; allowing Node.js on Public networks also lets it accept connections on
 café or airport Wi-Fi.
 
