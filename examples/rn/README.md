@@ -53,34 +53,65 @@ ships:
 
 ### Steps
 
-1. **Stop moosii-rn's Metro server** if it is running, or let this app use another port.
-   Both default to 8081, and the dev build would otherwise open moosii-rn.
-2. Start Metro for this app (from `examples/rn`):
+1. **Stop moosii-rn's Metro server** if it is running, or let this app use another port
+   (the steps below use 8082). Both default to 8081, and the dev build would otherwise open
+   moosii-rn.
+2. Find your computer's **current** Wi-Fi IPv4 address. It can change when the router
+   reassigns it, so check each time:
+
+   ```powershell
+   ipconfig
+   ```
+
+   Use the IPv4 address of the Wi-Fi adapter, e.g. `192.168.68.70`. The iPhone must be on the
+   same Wi-Fi.
+3. Start Metro for this app from `examples/rn`, telling it that address. A server that is
+   already running keeps the address it started with, so stop any old one (Ctrl+C) first.
+
+   PowerShell:
+
+   ```powershell
+   $env:REACT_NATIVE_PACKAGER_HOSTNAME = "192.168.68.70"
+   npx expo start --dev-client --lan --port 8082
+   ```
+
+   bash:
 
    ```bash
-   npx expo start --dev-client --port 8082
+   REACT_NATIVE_PACKAGER_HOSTNAME=192.168.68.70 npx expo start --dev-client --lan --port 8082
    ```
 
-   If 8082 is taken, Expo asks to use another port; say yes and note the port it prints.
-   You can ignore the warning "Unable to determine the default URI scheme… ensure that the
-   expo-dev-client package is installed": this app deliberately doesn't include
-   `expo-dev-client`, so its QR code can't deep-link into moosii-rn's app. You will enter the
-   URL by hand instead.
-3. Find your computer's LAN address (Windows: `ipconfig`, the IPv4 address, e.g.
-   `192.168.68.68`). The iPhone must be on the same Wi-Fi. On Windows, allow Node.js through
-   the firewall on private networks if asked.
-4. On the iPhone, open the **moosii-rn development build**. If it reopens moosii-rn, shake the
+   If 8082 is taken, Expo asks to use another port; say yes and note the port.
+4. **Ignore the URL Expo prints.** It says `Waiting on http://localhost:8082`, because this app
+   deliberately doesn't include `expo-dev-client`, so the CLI has no deep link to show. On the
+   phone, `localhost` means the phone itself, which gives **"localhost is currently
+   unavailable"**. The warning "Unable to determine the default URI scheme…" is the same cause
+   and is harmless. The server itself advertises your LAN address; to check, open
+   `http://192.168.68.70:8082` in a browser on this computer and look for your address (not
+   `localhost`) in `launchAsset.url` and `hostUri`.
+5. On the iPhone, open the **moosii-rn development build**. If it reopens moosii-rn, shake the
    phone (or use the dev menu) and choose **Go home** to get back to the launcher.
-5. In the launcher, under **Development servers**, tap **Enter URL manually** and type:
+6. In the launcher, under **Development servers**, tap **Enter URL manually** and type your
+   address and port:
 
    ```
-   http://192.168.68.68:8082
+   http://192.168.68.70:8082
    ```
 
-   using your own address and port, then tap **Connect**. The app opens as
-   "Moosii Games RN proof".
-6. Play **Groups** and **Word of the Day**, and try **Take a Moment**. To get back to moosii-rn
+   Then tap **Connect**. The app opens as "Moosii Games RN proof".
+7. Play **Groups** and **Word of the Day**, and try **Take a Moment**. To get back to moosii-rn
    later, use **Go home** in the dev menu and pick its server again.
+
+**Windows firewall and network profile.** The phone has to reach Node.js on this computer.
+Check that an inbound **Allow** rule for your `node.exe` covers the profile your Wi-Fi uses
+(Settings → Network & internet → Wi-Fi → your network → Network profile type). If you use
+nvm, the rule must name the real path (e.g. `D:
+vm20.20.2
+ode.exe`), not the
+`nvm4w
+odejs` link. For a home network, the usual setup is profile **Private** with Node.js
+allowed on Private; allowing Node.js on Public networks also lets it accept connections on
+café or airport Wi-Fi.
 
 **Not on the same Wi-Fi?** Start with a tunnel instead (Expo may offer to install
 `@expo/ngrok` the first time):
@@ -88,6 +119,8 @@ ships:
 ```bash
 npx expo start --dev-client --port 8082 --tunnel
 ```
+
+(Like the LAN case, ignore any `localhost` URL it prints.)
 
 When it prints the tunnel address (`exp://<something>.exp.direct`), enter it in the launcher
 as `https://<something>.exp.direct`.
