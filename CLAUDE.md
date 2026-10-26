@@ -101,6 +101,18 @@ layer instead of loosening `eslint.config.js` or `tsconfig.portable.json`.
 - Always-visible way to leave; >= 44px targets; keyboard operable on web (the pond takes
   arrows + Enter); no red/green reliance.
 
+## Known iOS pitfalls (React Native renderers, incl. moosii-rn)
+
+- **Narrow single glyphs can vanish.** In Word of the Day on iOS, a typed bold capital "I"
+  left an empty box: the letter was in the game state but not drawn, so the next letter
+  looked like it skipped a box. Cause: a `Text` that shrink-wraps a single narrow glyph inside
+  a centred container (`alignItems: 'center'`) can be measured a fraction too narrow on iOS
+  and clipped to nothing. Fix pattern: give single-letter `Text` (grid cells, keyboard keys,
+  tiles) `width: '100%'` and `textAlign: 'center'` inside its fixed-size box, instead of
+  relying on the parent to centre a shrink-wrapped `Text`. Web is unaffected. See
+  `cellText` / `keyText` in `examples/rn/src/WordScreen.tsx`. A JS unit test can't catch
+  this; check on a real iPhone, typing I, J, L and T.
+
 ## Content
 
 - Fixtures are placeholders: Groups titles contain "FIXTURE — NOT REVIEWED CONTENT", Word

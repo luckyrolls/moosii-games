@@ -124,6 +124,19 @@ npm run check:hermes   # production export for iOS and Android, compiled to Herm
 device (Expo Go). The shared layers avoid Intl and locale APIs; the local date in
 completion events uses only `getFullYear`/`getMonth`/`getDate`.
 
+## Known iOS pitfalls
+
+- **A typed "I" disappeared in Word of the Day (fixed).** On the iPhone, typing I left an
+  empty box and the next letter appeared one box further on. The letter was in the game
+  state; it just wasn't drawn. Cause: each letter's `Text` was shrink-wrapped and centred by
+  its parent (`alignItems: 'center'`), and iOS can measure a single narrow bold glyph a
+  fraction too narrow and clip it to nothing. Fix: `cellText` and `keyText` in
+  `src/WordScreen.tsx` use `width: '100%'` and `textAlign: 'center'`, so the `Text` fills its
+  box instead of shrink-wrapping. Apply the same pattern to any single-letter `Text` (cells,
+  keys, tiles) when the keyboard is rebuilt in moosii-rn. The web version never had the
+  problem. A JavaScript test can't reproduce it, so check on a real iPhone by typing I, J, L
+  and T.
+
 ## Known noise
 
 - `npm audit` reports `node-forge` (inside Expo's CLI tooling) and `zod` < 4.6.6 (the shared
