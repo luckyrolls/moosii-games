@@ -11,6 +11,9 @@
     ],
     "experiments": {
       "tsconfigPaths": false
-    }
+    },
+    "plugins": [
+      "expo-status-bar"
+    ]
   }
 }

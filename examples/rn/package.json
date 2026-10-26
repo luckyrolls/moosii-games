@@ -11,17 +11,17 @@
     "typecheck": "tsc --noEmit",
     "wordlist": "node scripts/build-wordlist.mjs",
     "check:bundle": "expo export --platform android --output-dir dist-dev --dev --no-minify --no-bytecode && node scripts/check-bundle.mjs",
-    "check:hermes": "expo export --platform android --output-dir dist-check"
+    "check:hermes": "expo export --platform all --output-dir dist-check"
   },
   "dependencies": {
-    "expo": "^57.0.17",
-    "expo-status-bar": "~57.0.1",
-    "react": "19.2.3",
-    "react-native": "0.86.3",
+    "expo": "58.0.19",
+    "expo-status-bar": "~58.0.4",
+    "react": "19.3.0",
+    "react-native": "0.88.0",
     "zod": "3.25.76"
   },
   "devDependencies": {
-    "@types/react": "19.2.18",
+    "@types/react": "19.3.0",
     "typescript": "~6.0.3"
   }
 }

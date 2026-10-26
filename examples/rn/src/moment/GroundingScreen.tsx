@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useRef } from 'react';
-import { AccessibilityInfo, findNodeHandle, StyleSheet, Text, View } from 'react-native';
+import { useEffect, useMemo, useRef, type ComponentRef } from 'react';
+import { AccessibilityInfo, StyleSheet, Text, View } from 'react-native';
 import { validateGroundingScript, type GroundingScript } from '../../../../src/core';
 import { useGrounding } from '../../../../src/react';
 import scriptFile from '../../../../fixtures/moment/grounding.json';
@@ -17,15 +17,14 @@ export function GroundingScreen({ onLeave }: { onLeave: () => void }) {
 
 function Steps({ script }: { script: GroundingScript }) {
   const g = useGrounding(script);
-  const heading = useRef<Text>(null);
+  const heading = useRef<ComponentRef<typeof Text>>(null);
   const shown = useRef(g.index);
 
   // Move screen-reader focus to a newly shown step; not on first load.
   useEffect(() => {
     if (shown.current === g.index) return;
     shown.current = g.index;
-    const node = heading.current && findNodeHandle(heading.current);
-    if (node) AccessibilityInfo.setAccessibilityFocus(node);
+    if (heading.current) AccessibilityInfo.sendAccessibilityEvent(heading.current, 'focus');
   }, [g.index]);
 
   return (
