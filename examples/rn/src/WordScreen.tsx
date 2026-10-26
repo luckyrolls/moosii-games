@@ -177,7 +177,9 @@ const s = StyleSheet.create({
   disc: { width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center' },
   discInPlace: { backgroundColor: colors.inPlace },
   discElsewhere: { borderWidth: 4, borderColor: colors.elsewhere },
-  cellText: { fontSize: 22, fontWeight: '700', color: colors.text },
+  // Full width + centred: a shrink-wrapped single narrow glyph (bold "I") can be measured a
+  // fraction too narrow on iOS and clipped to nothing.
+  cellText: { width: '100%', textAlign: 'center', fontSize: 22, fontWeight: '700', color: colors.text },
   dash: { position: 'absolute', bottom: 5, width: 14, height: 3, borderRadius: 2, backgroundColor: colors.muted },
   keyboard: { gap: 6 },
   keyRow: { flexDirection: 'row', justifyContent: 'center', gap: 6 },
@@ -192,7 +194,7 @@ const s = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  keyText: { fontSize: 18, fontWeight: '700', color: colors.text },
+  keyText: { width: '100%', textAlign: 'center', fontSize: 18, fontWeight: '700', color: colors.text },
   results: { gap: 8 },
   answer: { fontSize: 32, fontWeight: '800', letterSpacing: 6, color: colors.text },
   takeaway: {
