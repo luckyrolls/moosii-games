@@ -26,3 +26,15 @@ export const wordFixtures: FixtureEntry[] = toEntries(
 export const momentFixtures: FixtureEntry[] = toEntries(
   import.meta.glob<unknown>(['/fixtures/moment/*.json', '/fixtures/moment/invalid/*.json'], { eager: true, import: 'default' }),
 );
+
+/** Jigsaw puzzles: fixtures/jigsaw/*.json and fixtures/jigsaw/invalid/*.json. */
+export const jigsawFixtures: FixtureEntry[] = toEntries(
+  import.meta.glob<unknown>(['/fixtures/jigsaw/*.json', '/fixtures/jigsaw/invalid/*.json'], { eager: true, import: 'default' }),
+);
+
+/** Jigsaw images as served URLs, keyed by their path relative to fixtures/jigsaw/ (e.g. "images/x.png"). */
+export const jigsawImageUrls: Record<string, string> = Object.fromEntries(
+  Object.entries(
+    import.meta.glob<string>('/fixtures/jigsaw/images/*.{png,jpg,jpeg,webp}', { eager: true, query: '?url', import: 'default' }),
+  ).map(([path, url]) => [path.replace(/^\/fixtures\/jigsaw\//, ''), url]),
+);

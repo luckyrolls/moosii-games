@@ -1,19 +1,22 @@
 import { useState } from 'react';
-import { GAME_DISPLAY_NAME, WORD_DISPLAY_NAME } from '../../core';
+import { GAME_DISPLAY_NAME, JIGSAW_DISPLAY_NAME, WORD_DISPLAY_NAME } from '../../core';
 import { GroupsPlayground } from './GroupsPlayground';
+import { JigsawPlayground } from './JigsawPlayground';
 import { MomentView } from './MomentPlayground';
 import { MOMENTS, type MomentChoice } from './moments';
 import { WordPlayground } from './WordPlayground';
 
-type GameChoice = 'groups' | 'word';
+type GameChoice = 'groups' | 'word' | 'jigsaw';
 
 const GAMES: { value: GameChoice; label: string }[] = [
   { value: 'groups', label: GAME_DISPLAY_NAME },
   { value: 'word', label: WORD_DISPLAY_NAME },
+  { value: 'jigsaw', label: JIGSAW_DISPLAY_NAME },
 ];
 
 function initialGame(): GameChoice {
-  return new URLSearchParams(window.location.search).get('game') === 'word' ? 'word' : 'groups';
+  const value = new URLSearchParams(window.location.search).get('game');
+  return GAMES.some((g) => g.value === value) ? (value as GameChoice) : 'groups';
 }
 
 function initialMoment(): MomentChoice | null {
@@ -78,7 +81,9 @@ export function App() {
           ))}
         </fieldset>
 
-        {game === 'groups' ? <GroupsPlayground /> : <WordPlayground />}
+        {game === 'groups' && <GroupsPlayground />}
+        {game === 'word' && <WordPlayground />}
+        {game === 'jigsaw' && <JigsawPlayground onBack={() => choose('groups')} />}
       </section>
 
       <section className="pg-section pg-moments" aria-labelledby="pg-moments-heading">
