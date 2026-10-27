@@ -1,0 +1,151 @@
+.mg-jigsaw__bar {
+  display: flex;
+  align-items: center;
+  gap: var(--mg-space-3);
+  flex-wrap: wrap;
+}
+
+.mg-jigsaw__difficulty {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mg-space-2);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.mg-jigsaw__difficulty legend {
+  padding: 0;
+  margin-bottom: var(--mg-space-2);
+  font-weight: 700;
+}
+
+.mg-jigsaw__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--mg-space-2);
+  min-height: var(--mg-tap-min);
+  padding: var(--mg-space-1) var(--mg-space-3);
+  border-radius: 999px;
+  border: var(--mg-border-width) solid var(--mg-color-border);
+  background: var(--mg-color-surface);
+  cursor: pointer;
+}
+
+.mg-jigsaw__chip input {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin: 0;
+  accent-color: var(--mg-color-button);
+}
+
+.mg-jigsaw__chip:has(input:checked) {
+  border-color: var(--mg-color-text);
+  font-weight: 700;
+}
+
+.mg-jigsaw__chip:has(input:focus-visible),
+.mg-jigsaw__tile:focus-visible,
+.mg-jigsaw .mg-results__heading:focus-visible {
+  outline: var(--mg-focus-ring);
+  outline-offset: 2px;
+}
+
+/* The frame reserves the image's shape while the board is measured. */
+.mg-jigsaw__frame {
+  width: 100%;
+}
+
+.mg-jigsaw__board {
+  position: relative;
+  border-radius: 0.5rem;
+  background: var(--mg-color-tile);
+  touch-action: manipulation;
+}
+
+.mg-jigsaw__tile {
+  position: absolute;
+  left: 0;
+  top: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  transform: translate(var(--mg-x), var(--mg-y));
+  transition: transform 220ms ease-out, box-shadow 150ms ease-out;
+  /* Thin seams so tile edges are visible. */
+  box-shadow: inset 0 0 0 1px rgba(20, 18, 15, 0.28);
+}
+
+/* Picked: raised (lifted, slightly larger, with a shadow) and outlined, not colour alone. */
+.mg-jigsaw__tile[aria-pressed='true'] {
+  z-index: 2;
+  transform: translate(var(--mg-x), var(--mg-y)) translateY(-4px) scale(1.06);
+  outline: 3px solid var(--mg-color-text);
+  outline-offset: -3px;
+  box-shadow:
+    inset 0 0 0 3px #ffffff,
+    0 8px 18px rgba(0, 0, 0, 0.45);
+}
+
+/* In place: a subtle settled edge; no longer pickable. */
+.mg-jigsaw__tile[data-in-place='true'] {
+  cursor: default;
+  box-shadow:
+    inset 0 0 0 2px rgba(255, 255, 255, 0.75),
+    inset 0 0 0 3px rgba(20, 18, 15, 0.25);
+}
+
+.mg-jigsaw__peek {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 0.5rem;
+  opacity: 0.9;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.mg-jigsaw__done {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mg-space-3);
+}
+
+.mg-jigsaw__picture {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mg-jigsaw__tile,
+  .mg-jigsaw__tile[aria-pressed='true'] {
+    transition: none;
+  }
+  /* Still raised by shadow and outline, but without the lift. */
+  .mg-jigsaw__tile[aria-pressed='true'] {
+    transform: translate(var(--mg-x), var(--mg-y));
+  }
+}
+
+@media (prefers-contrast: more) {
+  .mg-jigsaw__tile {
+    box-shadow: inset 0 0 0 2px #000000;
+  }
+  .mg-jigsaw__tile[data-in-place='true'] {
+    box-shadow:
+      inset 0 0 0 3px #ffffff,
+      inset 0 0 0 4px #000000;
+  }
+}
+
+@media (forced-colors: active) {
+  .mg-jigsaw__tile[aria-pressed='true'] {
+    outline: 4px solid Highlight;
+  }
+}
