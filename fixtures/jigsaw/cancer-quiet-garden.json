@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "game": "jigsaw",
+  "puzzle_id": "fixture-jigsaw-cancer-01",
+  "domain": "cancer",
+  "title": "A quiet garden (FIXTURE — NOT REVIEWED CONTENT)",
+  "image": {
+    "src": "images/quiet-garden.png",
+    "width": 1600,
+    "height": 900,
+    "alt": "A quiet garden at sunrise with a wooden bench, three stepping stones, rows of pink, lilac and white flowers, and birds in a peach sky."
+  },
+  "source_lesson_id": "fixture-lesson-rest-and-recovery"
+}

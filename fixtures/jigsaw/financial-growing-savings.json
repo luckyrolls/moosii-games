@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "game": "jigsaw",
+  "puzzle_id": "fixture-jigsaw-financial-01",
+  "domain": "financial",
+  "title": "Growing savings (FIXTURE — NOT REVIEWED CONTENT)",
+  "image": {
+    "src": "images/growing-savings.png",
+    "width": 1600,
+    "height": 900,
+    "alt": "Three glass jars on a wooden shelf holding a small, a medium and a tall stack of gold coins, beside a potted plant with a new shoot, above a striped rug."
+  },
+  "source_lesson_id": "fixture-lesson-saving-habits"
+}

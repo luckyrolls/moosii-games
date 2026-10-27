@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "game": "jigsaw",
+  "puzzle_id": "fixture-jigsaw-invalid-01",
+  "domain": "financial",
+  "title": "Deliberately invalid, tests the error screen (FIXTURE — NOT REVIEWED CONTENT)",
+  "image": {
+    "src": "images/growing-savings.png",
+    "width": 1200,
+    "height": 1000,
+    "alt": "Three glass jars of coins on a shelf."
+  },
+  "source_lesson_id": "fixture-lesson-saving-habits"
+}

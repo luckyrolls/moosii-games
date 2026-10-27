@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "game": "jigsaw",
+  "puzzle_id": "fixture-jigsaw-moosii-01",
+  "domain": "moosii",
+  "title": "Afternoon in the park (FIXTURE — NOT REVIEWED CONTENT)",
+  "image": {
+    "src": "images/park-afternoon.png",
+    "width": 1600,
+    "height": 900,
+    "alt": "A sunny park with rolling green hills, three round trees, a winding sandy path, white clouds and a pink and purple kite."
+  },
+  "source_lesson_id": "fixture-lesson-outdoor-play"
+}
