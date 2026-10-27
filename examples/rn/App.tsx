@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { GAME_DISPLAY_NAME, WORD_DISPLAY_NAME } from '../../src/core';
+import { GAME_DISPLAY_NAME, JIGSAW_DISPLAY_NAME, WORD_DISPLAY_NAME } from '../../src/core';
 import { GroupsScreen } from './src/GroupsScreen';
+import { JigsawScreen } from './src/JigsawScreen';
 import { WordScreen } from './src/WordScreen';
 import { BreathingScreen } from './src/moment/BreathingScreen';
 import { GroundingScreen } from './src/moment/GroundingScreen';
@@ -10,7 +11,7 @@ import { momentColors } from './src/moment/MomentFrame';
 import { PondScreen } from './src/moment/PondScreen';
 import { Button, colors, styles as ui } from './src/ui';
 
-type Game = 'groups' | 'word';
+type Game = 'groups' | 'word' | 'jigsaw';
 type Moment = 'breathing' | 'pond' | 'grounding';
 
 const MOMENTS: { value: Moment; label: string }[] = [
@@ -63,8 +64,11 @@ export default function App() {
         <View style={ui.row} accessibilityRole="radiogroup">
           <Button label={GAME_DISPLAY_NAME} selected={game === 'groups'} onPress={() => setGame('groups')} />
           <Button label={WORD_DISPLAY_NAME} selected={game === 'word'} onPress={() => setGame('word')} />
+          <Button label={JIGSAW_DISPLAY_NAME} selected={game === 'jigsaw'} onPress={() => setGame('jigsaw')} />
         </View>
-        {game === 'groups' ? <GroupsScreen /> : <WordScreen />}
+        {game === 'groups' && <GroupsScreen />}
+        {game === 'word' && <WordScreen />}
+        {game === 'jigsaw' && <JigsawScreen onBack={() => setGame('groups')} />}
       </ScrollView>
     </View>
   );

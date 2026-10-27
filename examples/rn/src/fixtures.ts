@@ -10,6 +10,11 @@ import wordBudget from '../../../fixtures/word/financial-budget.json';
 import wordPacing from '../../../fixtures/word/cancer-pacing.json';
 import wordInvalid from '../../../fixtures/word/invalid/broken-word-example.json';
 
+import jigsawPark from '../../../fixtures/jigsaw/moosii-park-afternoon.json';
+import jigsawSavings from '../../../fixtures/jigsaw/financial-growing-savings.json';
+import jigsawGarden from '../../../fixtures/jigsaw/cancer-quiet-garden.json';
+import jigsawInvalid from '../../../fixtures/jigsaw/invalid/broken-jigsaw-example.json';
+
 export interface Fixture {
   path: string;
   data: unknown;
@@ -29,3 +34,17 @@ export const wordFixtures: Fixture[] = [
   { path: 'word/cancer-pacing.json', data: wordPacing },
   { path: 'word/invalid/broken-word-example.json', data: wordInvalid },
 ];
+
+export const jigsawFixtures: Fixture[] = [
+  { path: 'jigsaw/moosii-park-afternoon.json', data: jigsawPark },
+  { path: 'jigsaw/financial-growing-savings.json', data: jigsawSavings },
+  { path: 'jigsaw/cancer-quiet-garden.json', data: jigsawGarden },
+  { path: 'jigsaw/invalid/broken-jigsaw-example.json', data: jigsawInvalid },
+];
+
+/** Bundled fixture images, keyed by image.src (relative to fixtures/jigsaw/). */
+export const jigsawImages: Record<string, number> = {
+  'images/park-afternoon.png': require('../../../fixtures/jigsaw/images/park-afternoon.png'),
+  'images/growing-savings.png': require('../../../fixtures/jigsaw/images/growing-savings.png'),
+  'images/quiet-garden.png': require('../../../fixtures/jigsaw/images/quiet-garden.png'),
+};
