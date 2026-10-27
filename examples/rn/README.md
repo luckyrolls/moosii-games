@@ -85,7 +85,7 @@ shared validators). No other native packages.
   (`react`, `zod`) against `examples/rn/node_modules`.
 - **Exactly one copy of React is bundled.** The repo root's `node_modules` is on Metro's
   `blockList`, so nothing can load from it.
-- **Both games work with RN renderers.** The renderers live only in `examples/rn/src/`, built
+- **All three games work with RN renderers.** The renderers live only in `examples/rn/src/`, built
   from `View` / `Pressable` / `Text`; no RN code goes back into `src/`.
   - Groups (`useGroupsGame`) loads the repo's `fixtures/*.json`, including the invalid one.
   - Word of the Day (`useWordGame`) loads `fixtures/word/*.json`. `isValidWord` comes from a
@@ -93,6 +93,9 @@ shared validators). No other native packages.
     `npm run wordlist`).
   - Each game shows the completion event JSON and share text when it ends, like the web
     playground.
+  - Jigsaw (`useJigsawGame`) loads `fixtures/jigsaw/*.json` and bundles their images from
+    `fixtures/jigsaw/images/`. Tiles are `Animated.View`s slid with the native driver on swap
+    (instant under Reduce Motion), each clipping the image with `overflow: 'hidden'`.
 - **Accessibility basics carry over.** Targets are at least 44pt; there are
   `accessibilityRole`/`accessibilityLabel`/`accessibilityState` props, a live message region
   (Android `accessibilityLiveRegion`, iOS `announceForAccessibility`), and a spoken

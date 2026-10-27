@@ -9,6 +9,10 @@ Small daily puzzles for Moosii, built in isolation. Read `README.md` for the lay
   fixtures in `fixtures/*.json`.
 - **Word of the Day**: `src/core/word`, `useWordGame`, `src/web/components/word/WordBoard`,
   fixtures in `fixtures/word/`. Each puzzle is tied to exactly one lesson or activity.
+- **Jigsaw**: `src/core/jigsaw`, `useJigsawGame`, `src/web/components/jigsaw/JigsawBoard`,
+  fixtures in `fixtures/jigsaw/` (images in `fixtures/jigsaw/images/`). Personal: the picture is
+  the approved illustration from a lesson the person has **completed**; at integration images
+  come only from completed lessons, never from this repo or another source.
 
 New games follow the same shape: engine + schema in `src/core/<game>/`, a hook in `src/react/`,
 a board in `src/web/components/<game>/`, fixtures in `fixtures/<game>/`, a playground entry.
@@ -54,8 +58,9 @@ layer instead of loosening `eslint.config.js` or `tsconfig.portable.json`.
 ## Naming and look
 
 - Player-facing names come only from `GAME_DISPLAY_NAME` (`src/core/constants.ts`, placeholder
-  "Groups") and `WORD_DISPLAY_NAME` (`src/core/word/constants.ts`, placeholder "Word of the
-  Day"). Don't hard-code them elsewhere.
+  "Groups"), `WORD_DISPLAY_NAME` (`src/core/word/constants.ts`, placeholder "Word of the
+  Day") and `JIGSAW_DISPLAY_NAME` (`src/core/jigsaw/constants.ts`, placeholder "Jigsaw").
+  Don't hard-code them elsewhere.
 - Do not use any New York Times game names, wording, colours or visual style, anywhere: UI,
   copy, docs, identifiers or code comments.
 - Word share text uses only 🔵 🟠 ⚪, never 🟩 🟨 ⬜ ⬛. Word marks are a blue filled disc
@@ -78,6 +83,22 @@ layer instead of loosening `eslint.config.js` or `tsconfig.portable.json`.
   rather than shrinking text below 18px.
 - Word keyboard: on narrow boards QWERTY halves stack five keys wide so keys stay >= 44px.
   Physical keyboard works too. Guess results are announced through an aria-live region.
+
+## Jigsaw rules
+
+- Square tiles and a swap mechanic only: no knobbed pieces, no drag-and-drop, no image
+  libraries. Web shows tiles with CSS `background-position`; React Native with `Image` inside a
+  view with `overflow: 'hidden'`.
+- Images must be landscape, aspect 1.6–2.1, long edge >= 1200 px, with non-empty alt text
+  (validated). Grid sizing (`chooseJigsawGrid`) steps down to an easier grid so **no tile is
+  ever smaller than 44px/pt**; keep that guarantee and its tests.
+- The starting layout is seeded by `puzzle_id` + difficulty played, with no tile starting in
+  place; a snapshot test guards it.
+- No timer, no move limit, no move counter on screen, nothing that reads as failing. Peek and
+  "Finish it for me" are always available; using them is recorded, not penalised.
+- The completion event has no points and records the difficulty actually played.
+- Swaps animate briefly (CSS transform / native-driven `Animated`) and are instant under
+  reduced motion; the picked tile is raised and outlined, never colour alone.
 
 ## Take a Moment (relaxation, not a game)
 

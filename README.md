@@ -1,11 +1,13 @@
 # moosii-games
 
 Small daily puzzles for Moosii (parenting, financial and life-after-cancer domains), built in
-isolation. Two games so far:
+isolation. Three games so far:
 
 - **Groups**: find four groups of four related tiles.
 - **Word of the Day**: guess a 4–8 letter word tied to one lesson or activity, with a hint and a
   takeaway shown at the end.
+- **Jigsaw**: square tiles from a picture; pick two tiles to swap them. Personal: the picture
+  is the approved illustration from a lesson the person has completed.
 
 Player-facing names come from `GAME_DISPLAY_NAME` / `WORD_DISPLAY_NAME` in `src/core` (placeholders).
 
@@ -39,10 +41,11 @@ npm run build     # type-check + production build into dist/
 src/
   core/              Pure TypeScript. No React, no DOM.             REUSABLE
     word/            Word of the Day engine, schema, scoring.        REUSABLE
+    jigsaw/          Jigsaw schema, grid sizing, shuffle, engine.    REUSABLE
     moment/          Take a Moment: breathing, ripples, grounding.   REUSABLE
   react/             Shared hooks. React only; no react-dom, no DOM. REUSABLE (also React Native)
   web/
-    components/      DOM renderers (GroupsBoard, word/, moment/).    REUSABLE (copy into moosii-reader)
+    components/      DOM renderers (GroupsBoard, word/, jigsaw/, moment/). REUSABLE (copy into moosii-reader)
     wordlist/        Lazily loaded guess dictionary (ENABLE).        REUSABLE (web hosts)
     playground/      Game + puzzle picker, fixtures, event display.  SCAFFOLDING ONLY
 fixtures/            Example puzzles (not reviewed content). Word puzzles in fixtures/word/.
@@ -160,6 +163,23 @@ won, counted, saved or sent anywhere.
 In the playground, Take a Moment is its own section below the games; `?moment=breathing`,
 `?moment=pond` or `?moment=grounding` opens one directly.
 
+### Jigsaw in a host app
+
+```tsx
+import { validateJigsawPuzzle } from './core';
+import { JigsawBoard } from './web/components';
+
+// The board measures its own width and picks the grid; difficulty steps down if tiles
+// would be under 44 px. imageSrc is the resolved URL of puzzle.image.src.
+<JigsawBoard puzzle={puzzle} imageSrc={url} onBack={leave} onComplete={(event) => {}} />;
+```
+
+`useJigsawGame(puzzle, { difficulty, boardWidthPx })` is the shared hook (React Native uses it
+directly; see `examples/rn/src/JigsawScreen.tsx`). The picture is shown with CSS
+`background-position` on web and `Image` inside an `overflow: hidden` view on React Native;
+no image libraries. At integration, images come **only from lessons the person has
+completed**; this repo never loads them from a backend.
+
 ## Word list and its license
 
 `src/web/wordlist/data/words-{4..8}.txt` (79,300 words) are filtered from **ENABLE**
@@ -179,4 +199,7 @@ always accepted.
 `fixtures/invalid/` has a deliberately broken puzzle that shows the validation-error screen.
 `fixtures/word/*.json` has one Word of the Day puzzle per domain (titles include
 "(FIXTURE — NOT REVIEWED CONTENT)"); `fixtures/word/invalid/` has a broken one.
+`fixtures/jigsaw/*.json` has one Jigsaw puzzle per domain using original generated images
+(`node scripts/generate-jigsaw-images.mjs`); their alt text is flagged for review in
+`fixtures/jigsaw/README.md`. `fixtures/jigsaw/invalid/` has one with a bad aspect ratio.
 In the playground you can also choose **Paste JSON…** to validate and play any puzzle.

@@ -9,6 +9,7 @@ written here, and a compile-time check in each validator fails the build if the 
 | --- | --- | --- |
 | `groups` | [`src/core/types.ts`](../src/core/types.ts) | [`src/core/validate.ts`](../src/core/validate.ts) |
 | `word` | [`src/core/word/types.ts`](../src/core/word/types.ts) | [`src/core/word/validate.ts`](../src/core/word/validate.ts) |
+| `jigsaw` | [`src/core/jigsaw/types.ts`](../src/core/jigsaw/types.ts) | [`src/core/jigsaw/validate.ts`](../src/core/jigsaw/validate.ts) |
 
 Changing anything here is a breaking change: bump that game's `schema_version` and update the
 types, validator, tests and this file together.
@@ -261,3 +262,115 @@ No letters, no word, no score. 🟩 🟨 ⬜ ⬛ are never used.
 - **Hint:** can be opened once; recorded as `hint_used`.
 - **Keyboard marks:** each letter shows the best mark seen so far (`in_place` > `elsewhere` > `absent`).
 - There are no timers.
+
+---
+
+# Jigsaw (`game: "jigsaw"`, v1)
+
+A square-tile picture puzzle: pick a tile, then another, and they swap. It is **personal**: in
+the product the image is the approved illustration from a lesson the person has completed.
+Daily selection and image hosting are decided elsewhere; this contract covers one puzzle.
+
+## Jigsaw puzzle file
+
+```ts
+interface JigsawPuzzle {
+  schema_version: 1;
+  game: "jigsaw";
+  puzzle_id: string;
+  domain: "moosii" | "financial" | "cancer";
+  title: string;
+  image: {
+    src: string;    // URL or path of the approved lesson illustration
+    width: number;  // intrinsic pixels, positive integer
+    height: number; // intrinsic pixels, positive integer
+    alt: string;    // describes the picture for screen readers
+  };
+  source_lesson_id: string;
+}
+```
+
+| Field | Type | Rules |
+| --- | --- | --- |
+| `schema_version` | `1` | Must be exactly `1`. |
+| `game` | `"jigsaw"` | Must be exactly `"jigsaw"`. |
+| `puzzle_id` | string | Required, not blank. Seeds the starting layout (with the difficulty) and identifies the puzzle in completion events. |
+| `domain` | `"moosii"` \| `"financial"` \| `"cancer"` | Same meaning as for Groups. |
+| `title` | string | Required, not blank, no leading/trailing whitespace. Shown to the player and on finish. |
+| `image.src` | string | Required, not blank, no leading/trailing whitespace. |
+| `image.width`, `image.height` | integer | Positive whole numbers of pixels. |
+| `image.alt` | string | Required, not blank, no leading/trailing whitespace. Read to screen readers when the picture is complete. |
+| `source_lesson_id` | string | Required, not blank. The completed lesson the image comes from. |
+
+### Cross-field rules
+
+- **Aspect** (`width / height`) must be between **1.6 and 2.1** inclusive (the lesson-image rule),
+  e.g. `image: aspect ratio (width / height) must be between 1.6 and 2.1, got 1.20`.
+- **Long edge** (`max(width, height)`) must be at least **1200 px**:
+  `image: the long edge must be at least 1200 px, got 1000`.
+- **No unknown fields**, at the top level or inside `image`.
+
+### Example
+
+```json
+{
+  "schema_version": 1,
+  "game": "jigsaw",
+  "puzzle_id": "fixture-jigsaw-financial-01",
+  "domain": "financial",
+  "title": "Growing savings",
+  "image": {
+    "src": "images/growing-savings.png",
+    "width": 1600,
+    "height": 900,
+    "alt": "Three glass jars on a wooden shelf holding a small, a medium and a tall stack of gold coins, beside a potted plant with a new shoot, above a striped rug."
+  },
+  "source_lesson_id": "fixture-lesson-saving-habits"
+}
+```
+
+## Jigsaw completion event
+
+Emitted once through `useJigsawGame`'s `onComplete` when a game ends. Never sent anywhere by the game.
+
+```ts
+interface JigsawCompletionEvent {
+  schema_version: 1;
+  game: "jigsaw";
+  puzzle_id: string;
+  difficulty: "gentle" | "medium" | "harder";
+  rows: number;
+  cols: number;
+  outcome: "solved" | "revealed";
+  moves: number;
+  used_peek: boolean;
+  completed_local_date: string; // "YYYY-MM-DD"
+}
+```
+
+| Field | Meaning |
+| --- | --- |
+| `difficulty` | The difficulty actually played. It can be easier than the one picked, if the screen was too narrow for that grid (see below). |
+| `rows`, `cols` | The grid played. |
+| `outcome` | `"solved"`: every tile placed. `"revealed"`: the player chose "Finish it for me". |
+| `moves` | Swaps made. Picking and putting back a tile is not a move. |
+| `used_peek` | Whether the player looked at the whole picture during the game. |
+| `completed_local_date` | The player's local calendar date (device time zone) when the game ended. |
+
+**No points, score or reward fields.** There is no share text for Jigsaw.
+
+## Jigsaw rules the contract assumes
+
+- **Grid sizing:** difficulty `gentle` / `medium` / `harder` aims for about 8 / 15 / 28 tiles.
+  For an image of aspect `a`, rows are chosen so that `cols = round(rows * a)` gives a total
+  closest to the target (ties go to fewer tiles), which keeps tiles close to square. Examples:
+  aspect 1.6 → 2x3, 3x5, 4x6; aspect 1.8 → 2x4, 3x5, 4x7; aspect 2.1 → 2x4, 3x6, 4x8.
+- **Minimum tile size:** with the board as wide as the screen allows, if a tile would be
+  smaller than `minTilePx` (default 44 px) on either side, the next easier grid is used.
+- **Starting layout:** seeded by `puzzle_id` and the difficulty played; no tile starts in its
+  correct cell.
+- **Moves:** pick a tile, then another, and they swap. Picking the same tile again puts it
+  back. A tile in its correct cell is in place and can't be picked.
+- **Peek** shows the whole picture while toggled on; using it is recorded, never penalised.
+- No timer, no move limit.
+
