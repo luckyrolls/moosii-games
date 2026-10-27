@@ -3,3 +3,4 @@ export * from './useWordGame';
 export * from './useBreathing';
 export * from './useRipples';
 export * from './useGrounding';
+export * from './useJigsawGame';
